@@ -2,20 +2,33 @@
 @()(implicit request: RequestHeader)
 
 @main("Welcome to Play") {
-  <h1>Welcome to Play!</h1>
-  @helper.form(action = CSRF(routes.HomeController.upload), 'enctype -> "multipart/form-data") {
-    <p>
-      <label>Name</label><input type="text" name="name">
-    </p>
-    <input type="file" name="picture">
-    <p>
-      <input type="submit">
-    </p>
-  }
-  @helper.form(action = CSRF(routes.HomeController.importFromTaleo), 'enctype -> "multipart/form-data") {
-    <input type="file" name="picture">
-    <p>
-      <input type="submit">
-    </p>
-  }
+  <div class="form-container">
+  <img class="mb-4" src="https://getbootstrap.com/assets/brand/bootstrap-solid.svg" alt="" width="72" height="72">
+  <h1 class="h3 mb-3 font-weight-normal">CV Anonymisation</h1>
+
+
+    <div class="card box-shadow">
+    <div class="card-header">Single Candidate</div>
+    <div class="card-body">
+    @helper.form(action = CSRF(routes.HomeController.upload), 'enctype -> "multipart/form-data") {
+      <label for="inputName" class="sr-only">Candidate name</label><input type="text" name="name" id="inputName" class="form-control" placeholder="Candidate name">
+      <input type="file" name="picture" class="form-control">
+      <input class="btn btn-lg btn-primary btn-block" type="submit" value="Upload">
+    }
+    </div>
+    </div>
+
+    <div class="card box-shadow">
+    <div class="card-header">Multiple Candidates</div>
+    <div class="card-body">
+    @helper.form(action = CSRF(routes.HomeController.importFromTaleo), 'enctype -> "multipart/form-data") {
+      <input type="file" name="picture" class="form-control" >
+      <input class="btn btn-lg btn-primary btn-block" type="submit" value="Upload">
+    }
+    </div>
+    </div>
+
+    <p class="mt-5 mb-3 text-muted">Hello!</p>
+
+  </div>
 }
