@@ -54,4 +54,13 @@ class HomeController(cc: ControllerComponents, executionContext: ExecutionContex
         "error" -> "Missing file")
     }
   }
+
+  def analyse = Action(parse.multipartFormData) { implicit request =>
+    request.body.file("picture").map { picture =>
+      Ok(PdfRedactor.candidates(picture.ref).toString)
+    }.getOrElse {
+      Redirect(routes.HomeController.index).flashing(
+        "error" -> "Missing file")
+    }
+  }
 }

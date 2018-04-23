@@ -9,6 +9,13 @@ import play.api.Logger
 
 object PdfRedactor {
 
+  def candidates(source: File): List[Candidate] = {
+    val document = PDDocument.load(source)
+    val candidates = TextFinder.analyse(document)
+    document.close()
+    candidates
+  }
+
   def redact(source: File, destination: OutputStream, names: List[String]): Unit = {
     val document = PDDocument.load(source)
 
