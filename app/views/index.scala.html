@@ -1,5 +1,18 @@
-@()
+@import views.html.helper.CSRF
+@()(implicit request: RequestHeader)
 
 @main("Welcome to Play") {
   <h1>Welcome to Play!</h1>
+    @helper.form(action = CSRF(routes.HomeController.upload), 'enctype -> "multipart/form-data") {
+
+      <p>
+        <label>Name</label><input type="text" name="name">
+      </p>
+    <input type="file" name="picture">
+
+    <p>
+      <input type="submit">
+    </p>
+
+  }
 }
