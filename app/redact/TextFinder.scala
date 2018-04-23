@@ -71,8 +71,8 @@ class AnalyseCV() extends PDFTextStripper {
       case None =>
         candidateNameRegex.findFirstMatchIn(text).foreach { m =>
           partialCandidate = Some(Candidate(
-            firstName = m.group(1),
-            lastName = m.group(2),
+            firstName = m.group(2),
+            lastName = m.group(1),
             id = m.group(3),
             jobText = m.group(4),
             jobId = "",
@@ -120,7 +120,7 @@ class RegexFinder(regex: Regex) extends PDFTextStripper {
   override protected def writeString(text: String, textPositions: java.util.List[TextPosition]): Unit = {
     find(text.toLowerCase).foreach { case (index, end) =>
       val first = textPositions.get(index)
-      val last = textPositions.get(end - 1)
+      val last = textPositions.get(Math.min(textPositions.size() - 1, end - 1))
       locations.append(
         FoundText(
           pageIndex = getCurrentPageNo - 1,

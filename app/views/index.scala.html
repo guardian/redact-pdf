@@ -12,7 +12,7 @@
       <input type="submit">
     </p>
   }
-  @helper.form(action = CSRF(routes.HomeController.analyse), 'enctype -> "multipart/form-data") {
+  @helper.form(action = CSRF(routes.HomeController.importFromTaleo), 'enctype -> "multipart/form-data") {
     <input type="file" name="picture">
     <p>
       <input type="submit">
