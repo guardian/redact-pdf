@@ -1,16 +1,12 @@
 package controllers
 
-import java.nio.file.Paths
-
 import akka.stream.scaladsl.StreamConverters
-import play.api._
 import play.api.mvc._
 import redact.PdfRedactor
 import play.api.data._
 import play.api.data.Forms._
 
 import scala.concurrent.{ExecutionContext, Future}
-import scala.util.{Failure, Success, Try}
 
 class HomeController(cc: ControllerComponents, executionContext: ExecutionContext) extends AbstractController(cc) {
 
@@ -35,11 +31,7 @@ class HomeController(cc: ControllerComponents, executionContext: ExecutionContex
         { userData =>
           val stream = StreamConverters.asOutputStream().mapMaterializedValue { outputStream =>
             Future {
-              val res = Try { PdfRedactor.redact(picture.ref, outputStream, List(userData.name)) }
-              res match {
-                case Success(_) => Logger.info("It worked")
-                case Failure(e) => Logger.info("It failed", e)
-              }
+              PdfRedactor.redact(picture.ref, outputStream, List(userData.name))
               outputStream.close()
             }
           }
@@ -47,8 +39,6 @@ class HomeController(cc: ControllerComponents, executionContext: ExecutionContex
           Ok.chunked(stream).withHeaders("Content-Disposition" -> s"inline; filename=$filename")
         }
       )
-
-
     }.getOrElse {
       Redirect(routes.HomeController.index).flashing(
         "error" -> "Missing file")
