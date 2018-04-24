@@ -38,7 +38,7 @@ class HomeController(cc: ControllerComponents, executionContext: ExecutionContex
         { userData =>
           val stream = StreamConverters.asOutputStream().mapMaterializedValue { outputStream =>
             Future {
-              PdfRedactor.redact(picture.ref, outputStream, List(userData.name))
+              PdfRedactor.redact(picture.ref, outputStream, splitName(userData.name))
               outputStream.close()
             }
           }
@@ -51,6 +51,8 @@ class HomeController(cc: ControllerComponents, executionContext: ExecutionContex
         "error" -> "Missing file")
     }
   }
+
+  private def splitName(name: String) = name.split(" ").toList.filter(_.nonEmpty)
 
   def importFromTaleo = Action(parse.multipartFormData) { implicit request =>
     request.body.file("picture").map { picture =>
@@ -72,7 +74,8 @@ class HomeController(cc: ControllerComponents, executionContext: ExecutionContex
             val entryName = s"anon-candidates/${candidate.id}-redact.pdf"
             zos.putNextEntry(new ZipEntry(entryName))
             try {
-              PdfRedactor.redact(doc, zos, candidate.firstName.split(" ").toList)
+              candidate.firstName.split(" ").toList
+              PdfRedactor.redact(doc, zos, splitName(candidate.firstName) ++ splitName(candidate.lastName))
               doc.close()
             } catch {
               case e: Exception => Logger.error("Oops", e)
