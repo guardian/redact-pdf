@@ -31,13 +31,13 @@ class HomeController(cc: ControllerComponents, executionContext: ExecutionContex
   )
 
   def upload = Action(parse.multipartFormData) { implicit request =>
-    request.body.file("picture").map { picture =>
+    request.body.file("pdf").map { pdf =>
       userForm.bindFromRequest().fold(
         { formWithErrors => BadRequest },
         { userData =>
           val stream = StreamConverters.asOutputStream().mapMaterializedValue { outputStream =>
             Future {
-              PdfRedactor.redact(picture.ref, outputStream, splitName(userData.name))
+              PdfRedactor.redact(pdf.ref, outputStream, splitName(userData.name))
               outputStream.close()
             }
           }
@@ -56,11 +56,11 @@ class HomeController(cc: ControllerComponents, executionContext: ExecutionContex
   private def quoteString(s: String) = "\"" + s + "\""
 
   def importFromTaleo = Action(parse.multipartFormData) { implicit request =>
-    request.body.file("picture").map { picture =>
-      val candidates = PdfRedactor.candidates(picture.ref)
-      val doc = PDDocument.load(picture.ref)
+    request.body.file("pdf").map { pdf =>
+      val candidates = PdfRedactor.candidates(pdf.ref)
+      val doc = PDDocument.load(pdf.ref)
       val docs = PdfRedactor.splitCandidates(doc, candidates)
-      val uploadedFilename = Paths.get(picture.filename).getFileName.toString
+      val uploadedFilename = Paths.get(pdf.filename).getFileName.toString
       val filename = uploadedFilename.replace(".pdf", "-anon.zip")
 
       val stream = StreamConverters.asOutputStream().mapMaterializedValue { outputStream =>
