@@ -14,9 +14,9 @@ import play.api.Logger
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class Application(cc: ControllerComponents, executionContext: ExecutionContext) extends AbstractController(cc) {
+class Application(cc: ControllerComponents) extends AbstractController(cc) {
 
-  implicit val ec = executionContext
+  implicit val ec = cc.executionContext
 
   def index() = Action { implicit request: Request[AnyContent] =>
     Ok(views.html.index())

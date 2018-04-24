@@ -21,7 +21,7 @@ trait AppComponents extends AssetsComponents
 
   override lazy val router: Router = new _root_.router.Routes(
     httpErrorHandler,
-    new Application(controllerComponents, executionContext),
+    new Application(controllerComponents),
     assetController
   )
 }
