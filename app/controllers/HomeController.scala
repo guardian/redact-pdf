@@ -5,7 +5,6 @@ import play.api.mvc._
 import redact.PdfRedactor
 import play.api.data._
 import play.api.data.Forms._
-import java.io.BufferedOutputStream
 import java.nio.file.Paths
 import java.util.zip.ZipOutputStream
 import java.util.zip.ZipEntry
@@ -54,6 +53,8 @@ class HomeController(cc: ControllerComponents, executionContext: ExecutionContex
 
   private def splitName(name: String) = name.split(" ").toList.filter(_.nonEmpty)
 
+  private def quoteString(s: String) = "\"" + s + "\""
+
   def importFromTaleo = Action(parse.multipartFormData) { implicit request =>
     request.body.file("picture").map { picture =>
       val candidates = PdfRedactor.candidates(picture.ref)
@@ -83,6 +84,12 @@ class HomeController(cc: ControllerComponents, executionContext: ExecutionContex
             zos.closeEntry()
           }
           doc.close()
+
+          zos.putNextEntry(new ZipEntry("anon-candidates/candidates.csv"))
+          candidates.foreach { c =>
+            zos.write(List(s"${c.lastName}, ${c.firstName}", c.id, c.jobText, c.jobId).map(quoteString).mkString("", ",", "\n").getBytes)
+          }
+          zos.closeEntry()
           zos.closeNow()
         }
       }
