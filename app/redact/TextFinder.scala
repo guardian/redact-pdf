@@ -21,6 +21,12 @@ object TextFinder {
     textFinder.locations.result()
   }
 
+  def findWebsite(document: PDDocument, domain: String): List[FoundText] = {
+    val textFinder = new RegexFinder(s"""$domain(\\/[^ ]*)?""".r)
+    textFinder.getText(document)
+    textFinder.locations.result()
+  }
+
   def findUrl(document: PDDocument): List[FoundText] = {
     val textFinder = new RegexFinder("""http[s]?:\/\/([a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*)(\/[^ ]*)?""".r)
     textFinder.getText(document)
