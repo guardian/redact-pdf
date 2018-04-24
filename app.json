@@ -6,7 +6,7 @@
   "env": {
     "APP_SECRET": {
       "description": "A secret key for verifying the integrity of signed cookies.",
-      "generator": "LraL2cVhsqZb[R3JAzIp]t>B;k86;X5yMxesSEXGKC7[7@=qB@DGEp2R5NXEJZfK"
+      "value": "LraL2cVhsqZb[R3JAzIp]t>B;k86;X5yMxesSEXGKC7[7@=qB@DGEp2R5NXEJZfK"
     }
   }
 }
