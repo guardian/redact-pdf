@@ -1,0 +1,12 @@
+{
+  "name": "Redact PDF",
+  "description": "Web based tool for redacting PDFs for name-blind recruitment",
+  "repository": "https://github.com/davidfurey/redact-pdf",
+  "keywords": ["cv", "recruitment", "redact", "resume"],
+  "env": {
+    "APP_SECRET": {
+      "description": "A secret key for verifying the integrity of signed cookies.",
+      "generator": "LraL2cVhsqZb[R3JAzIp]t>B;k86;X5yMxesSEXGKC7[7@=qB@DGEp2R5NXEJZfK"
+    }
+  }
+}
