@@ -3,7 +3,7 @@ package wiring
 import akka.actor.ActorSystem
 import play.api.routing.Router
 import play.api.BuiltInComponentsFromContext
-import controllers.{AssetsComponents, HomeController}
+import controllers.{AssetsComponents, Application}
 import play.api.mvc.EssentialFilter
 import play.filters.HttpFiltersComponents
 import play.filters.hosts.AllowedHostsFilter
@@ -21,7 +21,7 @@ trait AppComponents extends AssetsComponents
 
   override lazy val router: Router = new _root_.router.Routes(
     httpErrorHandler,
-    new HomeController(controllerComponents, executionContext),
+    new Application(controllerComponents, executionContext),
     assetController
   )
 }

@@ -14,7 +14,7 @@ import play.api.Logger
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class HomeController(cc: ControllerComponents, executionContext: ExecutionContext) extends AbstractController(cc) {
+class Application(cc: ControllerComponents, executionContext: ExecutionContext) extends AbstractController(cc) {
 
   implicit val ec = executionContext
 
@@ -46,7 +46,7 @@ class HomeController(cc: ControllerComponents, executionContext: ExecutionContex
         }
       )
     }.getOrElse {
-      Redirect(routes.HomeController.index).flashing(
+      Redirect(routes.Application.index).flashing(
         "error" -> "Missing file")
     }
   }
@@ -95,7 +95,7 @@ class HomeController(cc: ControllerComponents, executionContext: ExecutionContex
       }
       Ok.chunked(stream).withHeaders("Content-Disposition" -> s"inline; filename=$filename")
     }.getOrElse {
-      Redirect(routes.HomeController.index).flashing(
+      Redirect(routes.Application.index).flashing(
         "error" -> "Missing file")
     }
   }
