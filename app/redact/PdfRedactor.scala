@@ -13,6 +13,13 @@ import play.api.Logger
 
 object PdfRedactor {
 
+  val commonNames = List(
+    "jonny",
+    "jamie",
+    "bob",
+    "dave"
+  )
+
   def splitCandidates(doc: PDDocument, candidates: List[Candidate]) = {
     val docs = new CustomSplitter(candidates.map(_.firstPage)).split(doc).asScala.toList
     val skipFirstPage = if (candidates.head.firstPage != 0) {
@@ -37,7 +44,7 @@ object PdfRedactor {
 
   def redact(document: PDDocument, destination: OutputStream, names: List[String]): Unit = {
     val foundNames = for {
-      name <- names
+      name <- names ++ commonNames
       found <- TextFinder.findString(document, name)
     } yield found
 

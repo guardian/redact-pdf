@@ -60,32 +60,44 @@ class AnalyseCV() extends PDFTextStripper {
 
   val candidates: ListBuffer[Candidate] = new ListBuffer
 
-  var partialCandidate: Option[Candidate] = None
+  var potentialCandidate: Option[Candidate] = None
+
+  var slidingWindow: List[String] = Nil
 
   super.setSortByPosition(true)
 
-  val candidateNameRegex = """^([\p{L} ]*), ([\p{L} ]*) \((\d+)\) applied for job: (.*)$""".r
+  val candidateNameRegex = """^([\p{L} ]*), ([\p{L} ]*) \((\d+)\) applied for job:(.*)$""".r
   val jobRegex = """^(.*) \((.*)\)$""".r
 
+  val fullRegex = """^([\p{L}- ]*), ([\p{L}- ]*) \((\d+)\) applied for job:(.*) \((.*)\)$""".r
+
+  def candidateFromMatch(m: Regex.Match) = {
+    Candidate(
+      firstName = m.group(2),
+      lastName = m.group(1),
+      id = m.group(3),
+      jobText = m.group(4).trim,
+      jobId = "",
+      firstPage = getCurrentPageNo - 1,
+      lastPage = getCurrentPageNo - 1
+    )
+  }
+
   override protected def writeString(text: String, textPositions: java.util.List[TextPosition]): Unit = {
-    partialCandidate match {
-      case Some(candidate) =>
-        jobRegex.findFirstMatchIn(s"${candidate.jobText} $text").foreach { m =>
-          candidates.append(candidate.copy(jobText = m.group(1), jobId = m.group(2)))
-        }
-        partialCandidate = None
-      case None =>
-        candidateNameRegex.findFirstMatchIn(text).foreach { m =>
-          partialCandidate = Some(Candidate(
-            firstName = m.group(2),
-            lastName = m.group(1),
-            id = m.group(3),
-            jobText = m.group(4),
-            jobId = "",
-            firstPage = getCurrentPageNo - 1,
-            lastPage = getCurrentPageNo - 1
-          ))
-        }
+
+    slidingWindow = text :: slidingWindow.take(2)
+
+    val last3Lines = fullRegex.findFirstMatchIn(slidingWindow.take(3).reverse.mkString(" ")).map(candidateFromMatch)
+    val last2Lines = fullRegex.findFirstMatchIn(slidingWindow.take(2).reverse.mkString(" ")).map(candidateFromMatch)
+    val last1Line = fullRegex.findFirstMatchIn(slidingWindow.take(1).reverse.mkString(" ")).map(candidateFromMatch)
+
+    (last3Lines orElse last2Lines orElse last1Line, potentialCandidate) match {
+      case (Some(newCandidate), _) =>
+        potentialCandidate = Some(newCandidate)
+      case (_, Some(candidate)) =>
+        candidates.append(candidate)
+        potentialCandidate = None
+      case _ =>
     }
   }
 }
