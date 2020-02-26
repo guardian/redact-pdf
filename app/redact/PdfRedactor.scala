@@ -1,15 +1,11 @@
 package redact
 
-import java.io.{File, OutputStream}
+import scala.collection.JavaConverters._
 
-import org.apache.pdfbox.pdmodel.{PDDocument, PDPageContentStream}
+import java.io.{File, OutputStream}
 import java.awt.Color
 
-import org.apache.pdfbox.multipdf.Splitter
-
-import scala.collection.JavaConverters._
-import play.api.Logger
-
+import org.apache.pdfbox.pdmodel.{PDDocument, PDPageContentStream}
 
 object PdfRedactor {
 
@@ -59,6 +55,9 @@ object PdfRedactor {
         TextFinder.findWebsite(document, "linkedin.com")
       ).flatten
     )
+
+    ImageRedactor.redactImages(document)
+
     document.save(destination)
   }
 
