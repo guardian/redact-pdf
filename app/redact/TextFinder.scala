@@ -5,10 +5,18 @@ import org.apache.pdfbox.text.{PDFTextStripper, TextPosition}
 
 import scala.collection.mutable.ListBuffer
 import scala.util.matching.Regex
+import play.api.Logger
 
 case class FoundText(pageIndex: Int, x1: Float, y1: Float, x2: Float, y2: Float, text: String)
 
 object TextFinder {
+
+  def findStringsMatchingRegex(document: PDDocument, needle: String): List[FoundText] = {
+    val textFinder = new RegexFinder(s"${needle.toLowerCase()}".r)
+    textFinder.getText(document)
+    textFinder.locations.result()
+  }
+
   def findString(document: PDDocument, needle: String): List[FoundText] = {
     val textFinder = new TextFinder(needle)
     textFinder.getText(document)
