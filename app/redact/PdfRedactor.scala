@@ -2,19 +2,19 @@ package redact
 
 import scala.collection.JavaConverters._
 
+import com.typesafe.config.ConfigFactory
+
 import java.io.{File, OutputStream}
 import java.awt.Color
 
 import org.apache.pdfbox.pdmodel.{PDDocument, PDPageContentStream}
+import play.api.Logger
 
 object PdfRedactor {
 
-  val commonNames = List(
-    "jonny",
-    "jamie",
-    "bob",
-    "dave"
-  )
+  val config = ConfigFactory.load()
+  val redactStringsList = config.getStringList("redact.genderedwords.list").asScala.toList
+  val commonNames = config.getStringList("redact.petnames.list").asScala.toList
 
   def splitCandidates(doc: PDDocument, candidates: List[Candidate]) = {
     val docs = new CustomSplitter(candidates.map(_.firstPage)).split(doc).asScala.toList
@@ -44,15 +44,17 @@ object PdfRedactor {
       found <- TextFinder.findString(document, name)
     } yield found
 
+    val redactedWords: List[FoundText] = redactStringsList.flatMap(word => TextFinder.findString(document, word))
 
     redactFoundText(
       document = document,
       redactions = List(
         foundNames,
+        redactedWords,
         TextFinder.findEmail(document),
         TextFinder.findUrl(document),
         TextFinder.findWebsite(document, "github.com"),
-        TextFinder.findWebsite(document, "linkedin.com")
+        TextFinder.findWebsite(document, "linkedin.com"),
       ).flatten
     )
 
@@ -77,4 +79,3 @@ object PdfRedactor {
     }
   }
 }
-
