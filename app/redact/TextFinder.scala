@@ -86,7 +86,7 @@ class AnalyseCV() extends PDFTextStripper {
       id = m.group(3),
       jobText = m.group(4).trim,
       jobId = "",
-      firstPage = getCurrentPageNo - 1,
+      firstPage = getCurrentPageNo - 2,
       lastPage = getCurrentPageNo - 1
     )
   }
@@ -98,6 +98,7 @@ class AnalyseCV() extends PDFTextStripper {
     val last3Lines = fullRegex.findFirstMatchIn(slidingWindow.take(3).reverse.mkString(" ")).map(candidateFromMatch)
     val last2Lines = fullRegex.findFirstMatchIn(slidingWindow.take(2).reverse.mkString(" ")).map(candidateFromMatch)
     val last1Line = fullRegex.findFirstMatchIn(slidingWindow.take(1).reverse.mkString(" ")).map(candidateFromMatch)
+
 
     (last3Lines orElse last2Lines orElse last1Line, potentialCandidate) match {
       case (Some(newCandidate), _) =>
