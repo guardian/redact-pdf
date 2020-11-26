@@ -17,6 +17,7 @@ object PdfRedactor {
   
   val enableExactStringMatching = config.getBoolean("redacted-exact-strings.enabled")
   val enableGreedyNameMatching = config.getBoolean("greedy-name-match.enabled")
+  val enableNewPageSplittingAndDeletion = config.getBoolean("new-page-split-behaviour.enabled")
 
   val redactStringsList = config.getStringList("redact.genderedwords.list").asScala.toList
   val commonNames = config.getStringList("redact.petnames.list").asScala.toList
@@ -78,8 +79,11 @@ object PdfRedactor {
 
     ImageRedactor.redactImages(document)
 
+    removeFirstPage(document)
     document.save(destination)
   }
+
+  def removeFirstPage(document: PDDocument) = if (enableNewPageSplittingAndDeletion) document.removePage(0)
 
   def redactFoundText(document: PDDocument, redactions: List[FoundText]): Unit = {
     val allPages = document.getDocumentCatalog.getPages
