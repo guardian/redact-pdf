@@ -44,6 +44,8 @@ object PdfRedactor {
       found <- TextFinder.findString(document, name)
     } yield found
 
+    val regexedNames: List[FoundText] = names.flatMap(word => TextFinder.findStringsMatchingRegex(document, word))
+
     val redactedWords: List[FoundText] = redactStringsList.flatMap(word => TextFinder.findString(document, word))
 
     redactFoundText(
@@ -55,6 +57,7 @@ object PdfRedactor {
         TextFinder.findUrl(document),
         TextFinder.findWebsite(document, "github.com"),
         TextFinder.findWebsite(document, "linkedin.com"),
+        regexedNames,
       ).flatten
     )
 
