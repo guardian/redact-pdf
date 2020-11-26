@@ -7,6 +7,8 @@ import scala.collection.mutable.ListBuffer
 import scala.util.matching.Regex
 import play.api.Logger
 
+import com.typesafe.config.ConfigFactory
+
 case class FoundText(pageIndex: Int, x1: Float, y1: Float, x2: Float, y2: Float, text: String)
 
 object TextFinder {
@@ -64,6 +66,20 @@ case class Candidate(
   lastPage: Int
 )
 
+object AnalyseCV {
+  val config = ConfigFactory.load()
+  val newPageSplitBehaviour = config.getBoolean("new-page-split-behaviour.enabled")
+
+  //Changing the splitDifference to two means that the first page of the redacted cv has the candidate's name and job applied for,
+  //rather than having it pull in the next candidate's unredacted at the bottom
+  val firstPageSplitDifference = {
+    if (newPageSplitBehaviour) {
+      2
+    } else {
+      1
+    }
+  }
+}
 class AnalyseCV() extends PDFTextStripper {
 
   val candidates: ListBuffer[Candidate] = new ListBuffer
@@ -86,7 +102,7 @@ class AnalyseCV() extends PDFTextStripper {
       id = m.group(3),
       jobText = m.group(4).trim,
       jobId = "",
-      firstPage = getCurrentPageNo - 2,
+      firstPage = getCurrentPageNo - AnalyseCV.firstPageSplitDifference,
       lastPage = getCurrentPageNo - 1
     )
   }
