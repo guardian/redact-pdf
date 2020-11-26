@@ -9,10 +9,15 @@ import java.awt.Color
 
 import org.apache.pdfbox.pdmodel.{PDDocument, PDPageContentStream}
 import play.api.Logger
+import scala.collection.Searching.Found
 
 object PdfRedactor {
 
   val config = ConfigFactory.load()
+  
+  val enableExactStringMatching = config.getBoolean("redacted-exact-strings.enabled")
+  val enableGreedyNameMatching = config.getBoolean("greedy-name-match.enabled")
+
   val redactStringsList = config.getStringList("redact.genderedwords.list").asScala.toList
   val commonNames = config.getStringList("redact.petnames.list").asScala.toList
 
@@ -44,10 +49,20 @@ object PdfRedactor {
       found <- TextFinder.findString(document, name)
     } yield found
 
-    val regexedNames: List[FoundText] = names.flatMap(word => TextFinder.findStringsMatchingRegex(document, word))
-
-    val redactedWords: List[FoundText] = redactStringsList.flatMap(word => TextFinder.findString(document, word))
-
+    val regexedNames: List[FoundText] = { 
+     if (enableGreedyNameMatching) { 
+      names.flatMap(word => TextFinder.findStringsMatchingRegex(document, word))
+     } else{
+        List.empty[FoundText]
+     }
+    }
+    val redactedWords: List[FoundText] = {
+      if (enableExactStringMatching) { 
+      redactStringsList.flatMap(word => TextFinder.findString(document, word))
+      } else {
+        List.empty[FoundText]
+      }
+    }
     redactFoundText(
       document = document,
       redactions = List(
