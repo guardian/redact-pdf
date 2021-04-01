@@ -19,7 +19,9 @@ object ImageRedactor {
         case image: PDImageXObject =>
           resources.put(name, Image.placeholder(image.getWidth, image.getHeight, document))
         case form: PDFormXObject =>
-          replaceImageObjects(form.getResources, document)
+          Option(form.getResources).foreach { resources =>
+            replaceImageObjects(resources, document)
+          }
       }
     }
   }
