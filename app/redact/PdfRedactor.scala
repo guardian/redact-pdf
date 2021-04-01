@@ -7,7 +7,10 @@ import com.typesafe.config.ConfigFactory
 import java.io.{File, OutputStream}
 import java.awt.Color
 
-import org.apache.pdfbox.pdmodel.{PDDocument, PDPageContentStream}
+import org.apache.pdfbox.pdmodel.{PDDocument, PDPage, PDPageContentStream}
+import org.apache.pdfbox.pdmodel.common.PDRectangle
+import org.apache.pdfbox.pdmodel.graphics.image.JPEGFactory
+import org.apache.pdfbox.rendering.{ImageType, PDFRenderer}
 import play.api.Logger
 import scala.collection.Searching.Found
 
@@ -80,7 +83,22 @@ object PdfRedactor {
     ImageRedactor.redactImages(document)
 
     removeFirstPage(document)
-    document.save(destination)
+
+    val rasterisedDoc = new PDDocument()
+    val renderer = new PDFRenderer(document)
+
+    for (page <- 0 until document.getNumberOfPages) {
+      val image = renderer.renderImageWithDPI(page, 300, ImageType.RGB)
+      val pdPage = new PDPage(PDRectangle.A4)
+      val pdImage = JPEGFactory.createFromImage(rasterisedDoc, image)
+      val contentStream = new PDPageContentStream(rasterisedDoc, pdPage)
+      contentStream.drawImage(pdImage, 0, 0, PDRectangle.A4.getWidth, PDRectangle.A4.getHeight)
+      contentStream.close()
+      rasterisedDoc.addPage(pdPage)
+    }
+
+    rasterisedDoc.save(destination)
+    rasterisedDoc.close()
   }
 
   def removeFirstPage(document: PDDocument) = if (enableNewPageSplittingAndDeletion) document.removePage(0)
