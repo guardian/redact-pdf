@@ -41,13 +41,19 @@ object PdfRedactor {
     candidates
   }
 
+  def redact(source: Array[Byte], destination: OutputStream, names: List[String], hasCoverPage: Boolean): Unit = {
+    val document = PDDocument.load(source)
+    redact(document, destination, names, hasCoverPage)
+    document.close()
+  }
+
   def redact(source: File, destination: OutputStream, names: List[String]): Unit = {
     val document = PDDocument.load(source)
     redact(document, destination, names)
     document.close()
   }
 
-  def redact(document: PDDocument, destination: OutputStream, names: List[String]): Unit = {
+  def redact(document: PDDocument, destination: OutputStream, names: List[String], hasCoverPage: Boolean = true): Unit = {
     val foundNames = for {
       name <- names ++ commonNames
       found <- TextFinder.findString(document, name)
@@ -82,7 +88,8 @@ object PdfRedactor {
 
     ImageRedactor.redactImages(document)
 
-    removeFirstPage(document)
+    if (hasCoverPage)
+      removeFirstPage(document)
 
     val rasterisedDoc = new PDDocument()
     val renderer = new PDFRenderer(document)
