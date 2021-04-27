@@ -29,6 +29,16 @@
     </div>
     </div>
 
+    <div class="card box-shadow">
+      <div class="card-header">Taleo integration</div>
+      <div class="card-body">
+        <button onclick="triggerAuthentication('@{CSRF.getToken.value}')" class="btn btn-lg btn-primary btn-block" id="authenticationButton">Authenticate</button>
+      </div>
+      <div class="card-body">
+        <button onclick="triggerSync('@{CSRF.getToken.value}')" class="btn btn-lg btn-danger btn-block" id="syncButton">Sync</button>
+      </div>
+    </div>
+
     <p class="mt-5 mb-3 text-muted">
       This tool attempts to remove names, pronouns, email addresses and urls from CVs so that recruiters
       selecting people for interview aren't influenced by the candidates gender. It is not

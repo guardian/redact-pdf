@@ -1,5 +1,7 @@
 package controllers
 
+import scala.concurrent.Future
+import scala.io.Source
 import akka.stream.scaladsl.StreamConverters
 import play.api.mvc._
 import redact.PdfRedactor
@@ -8,15 +10,40 @@ import play.api.data.Forms._
 import java.nio.file.Paths
 import java.util.zip.ZipOutputStream
 import java.util.zip.ZipEntry
-
+import akka.actor.Scheduler
+import jobs.{SyncStatus, UpdateSpreadsheet}
 import org.apache.pdfbox.pdmodel.PDDocument
-import play.api.Logger
+import taleo.Authentication
+import play.api.{Configuration, Logger}
+import play.api.libs.json.Json
+import play.api.libs.ws.WSClient
+import taleo.TaleoCredentials
+import zio.Runtime
 
-import scala.concurrent.{ExecutionContext, Future}
 
-class Application(cc: ControllerComponents) extends AbstractController(cc) {
+class Application(
+  cc: ControllerComponents,
+  config: Configuration,
+  wsClient: WSClient,
+) extends AbstractController(cc) {
 
   implicit val ec = cc.executionContext
+
+  val taleoUrl = config.get[String]("taleo-url")
+
+  var taleoCredentials = TaleoCredentials(
+    sessionId = "",
+    jSessionId = "",
+    taleoSession = "=",
+    csrfToken = ""
+  )
+
+  val jsonCredentials: String = {
+    val source = Source.fromFile(s"/etc/gu/redact-pdf/credentials.json")
+    val credentials = source.mkString
+    source.close
+    credentials
+  }
 
   def index() = Action { implicit request: Request[AnyContent] =>
     Ok(views.html.index())
@@ -98,5 +125,37 @@ class Application(cc: ControllerComponents) extends AbstractController(cc) {
       Redirect(routes.Application.index).flashing(
         "error" -> "Missing file")
     }
+  }
+
+  def authenticate = Action.async {
+    Runtime.default.unsafeRunToFuture(
+      Authentication.authenticate(taleoUrl).fold(
+        { error => InternalServerError(error) },
+        { credentials =>
+          taleoCredentials = credentials
+          Ok("Authenticated")
+        }
+      )
+    )
+  }
+
+  def sync = Action.async {
+    val dependencies =
+      (services.PlayConfiguration.sharedDriveConfig(config) to services.SharedDriveLive.impl(jsonCredentials)) and
+      (services.PlayConfiguration.spreadsheetConfig(config) to services.SpreadsheetLive.impl(jsonCredentials)) and
+      ((
+        services.HttpClientLive.impl(wsClient) and
+        services.TaleoCredentialsLive.impl(taleoCredentials) and
+        services.PlayConfiguration.taleoConfig(config))
+        to services.TaleoLive.impl)
+
+    Runtime.default.unsafeRunToFuture(
+      UpdateSpreadsheet.sync()
+        .provideCustomLayer(dependencies)
+        .fold({ error =>
+          println(error)
+          SyncStatus(error = true, lastIndex = 0)
+        }, identity)
+    ).future.map({ status => Ok(Json.toJson(status)) })
   }
 }
