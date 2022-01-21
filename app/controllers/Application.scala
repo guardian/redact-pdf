@@ -48,7 +48,7 @@ class Application(cc: ControllerComponents) extends AbstractController(cc) {
         }
       )
     }.getOrElse {
-      Redirect(routes.Application.index).flashing(
+      Redirect(routes.Application.index()).flashing(
         "error" -> "Missing file")
     }
   }
@@ -97,7 +97,7 @@ class Application(cc: ControllerComponents) extends AbstractController(cc) {
       }
       Ok.chunked(stream).withHeaders("Content-Disposition" -> s"inline; filename=$filename")
     }.getOrElse {
-      Redirect(routes.Application.index).flashing(
+      Redirect(routes.Application.index()).flashing(
         "error" -> "Missing file")
     }
   }

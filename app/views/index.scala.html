@@ -11,7 +11,7 @@
     <div class="card box-shadow">
     <div class="card-header">Single Candidate</div>
     <div class="card-body">
-    @helper.form(action = CSRF(routes.Application.upload), 'enctype -> "multipart/form-data") {
+    @helper.form(action = CSRF(routes.Application.upload()), Symbol("enctype") -> "multipart/form-data") {
       <label for="inputName" class="sr-only">Candidate name</label><input type="text" name="name" id="inputName" class="form-control" placeholder="Candidate name">
       <input type="file" name="pdf" class="form-control" accept="application/pdf">
       <input class="btn btn-lg btn-primary btn-block" type="submit" value="Upload">
@@ -22,7 +22,7 @@
     <div class="card box-shadow">
     <div class="card-header">Multiple Candidates (Taleo)</div>
     <div class="card-body">
-    @helper.form(action = CSRF(routes.Application.importFromTaleo), 'enctype -> "multipart/form-data") {
+    @helper.form(action = CSRF(routes.Application.importFromTaleo()), Symbol("enctype") -> "multipart/form-data") {
       <input type="file" name="pdf" class="form-control" accept="application/pdf">
       <input class="btn btn-lg btn-primary btn-block" type="submit" value="Upload">
     }

@@ -1,7 +1,6 @@
 package redact
 
-import scala.collection.JavaConverters._
-
+import scala.jdk.CollectionConverters._
 import com.typesafe.config.ConfigFactory
 
 import java.io.{File, OutputStream}
