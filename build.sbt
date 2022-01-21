@@ -5,10 +5,10 @@ version := "1.0-SNAPSHOT"
 
 lazy val root = (project in file(".")).enablePlugins(PlayScala)
 
-scalaVersion := "2.12.15"
+scalaVersion := "2.13.8"
 
 libraryDependencies ++= Seq(
-  "org.scalatestplus.play" %% "scalatestplus-play" % "3.1.2" % Test,
+  "org.scalatestplus.play" %% "scalatestplus-play" % "5.1.0" % Test,
   "org.apache.pdfbox" % "pdfbox" % "2.0.18"
 )
 
