@@ -11,11 +11,12 @@ class AppLoader extends ApplicationLoader {
   val enableExactStringMatching = config.getBoolean("redacted-exact-strings.enabled")
   val enableGreedyNameMatching = config.getBoolean("greedy-name-match.enabled")
   val enableNewPageSplittingAndDeletion = config.getBoolean("new-page-split-behaviour.enabled")
+  val logger = Logger(this.getClass())
 
-  Logger.info("Starting Application with the following configuration")
-  Logger.info(s"Exact Redacted Strings matching is set to: $enableExactStringMatching")
-  Logger.info(s"Greedy Candidate Name matching is set to: $enableGreedyNameMatching")
-  Logger.info(s"Alternative Page Splitting and Deleting Cover Page is set to: $enableNewPageSplittingAndDeletion")
+  logger.info("Starting Application with the following configuration")
+  logger.info(s"Exact Redacted Strings matching is set to: $enableExactStringMatching")
+  logger.info(s"Greedy Candidate Name matching is set to: $enableGreedyNameMatching")
+  logger.info(s"Alternative Page Splitting and Deleting Cover Page is set to: $enableNewPageSplittingAndDeletion")
 
 
   override def load(context: Context): Application = {

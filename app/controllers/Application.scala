@@ -16,6 +16,8 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class Application(cc: ControllerComponents) extends AbstractController(cc) {
 
+  val logger = Logger(this.getClass())
+
   implicit val ec = cc.executionContext
 
   def index() = Action { implicit request: Request[AnyContent] =>
@@ -79,7 +81,7 @@ class Application(cc: ControllerComponents) extends AbstractController(cc) {
               PdfRedactor.redact(doc, zos, splitName(candidate.firstName) ++ splitName(candidate.lastName))
               doc.close()
             } catch {
-              case e: Exception => Logger.error("Oops", e)
+              case e: Exception => logger.error("Oops", e)
             }
             zos.closeEntry()
           }
