@@ -4,7 +4,7 @@
 # ~~~~
 
 # An example controller showing a sample home page
-GET     /                           controllers.Application.index
+GET     /                           controllers.Application.index()
 
 POST  /          controllers.Application.upload()
 POST  /importFromTaleo          controllers.Application.importFromTaleo()
