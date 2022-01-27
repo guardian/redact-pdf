@@ -13,15 +13,16 @@ object ImageRedactor {
     }
   }
 
-  private def replaceImageObjects(resources: PDResources, document: PDDocument): Unit = {
+  private def replaceImageObjects(resources: PDResources, document: PDDocument, limit: Int = 0): Unit = {
     resources.getXObjectNames.iterator().asScala.foreach { name =>
       resources.getXObject(name) match {
         case image: PDImageXObject =>
           resources.put(name, Image.placeholder(image.getWidth, image.getHeight, document))
-        case form: PDFormXObject =>
+        case form: PDFormXObject if limit < 10 =>
           Option(form.getResources).foreach { resources =>
-            replaceImageObjects(resources, document)
+            replaceImageObjects(resources, document, limit + 1)
           }
+        case _ =>
       }
     }
   }
