@@ -102,7 +102,7 @@ class AnalyseCV() extends PDFTextStripper {
       id = m.group(3),
       jobText = m.group(4).trim,
       jobId = "",
-      firstPage = getCurrentPageNo - AnalyseCV.firstPageSplitDifference,
+      firstPage = getCurrentPageNo - 1,
       lastPage = getCurrentPageNo - 1
     )
   }
