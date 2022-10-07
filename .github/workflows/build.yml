@@ -1,0 +1,98 @@
+name: build
+on:
+  workflow_dispatch:
+  push:
+jobs:
+  build:
+    name: Build and upload to riffraff
+    runs-on: ubuntu-latest
+    # These permissions are needed to interact with GitHub's OIDC Token endpoint.
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          role-to-assume: ${{ secrets.GU_RIFF_RAFF_ROLE_ARN }}
+          aws-region: eu-west-1
+
+      - name: Setup node
+        uses: guardian/actions-setup-node@v2.4.1
+
+      - run: npm install
+      - run: npm run build
+
+      - uses: guardian/actions-riff-raff@v1
+        name: upload to riffraff
+        with:
+          app: companies-house-stream-listener
+          config: |
+            stacks:
+              - investigations
+            regions:
+              - eu-west-1
+            allowedStages:
+              - PROD
+            deployments:
+              cloudformation:
+                type: cloud-formation
+                app: companies-house-stream-listener
+                sources:
+                  - cdk/cdk.out/CompaniesHouseStreamListener-PROD.template.json
+                parameters:
+                  prependStackToCloudFormationStackName: false
+                  templatePath: CompaniesHouseStreamListener-PROD.template.json
+                  amiParameter: AMICompanieshousestreamlistener
+                  amiTags:
+                    Recipe: investigations-node
+                    AmigoStage: PROD
+              companies-house-stream-listener:
+                type: autoscaling
+                actions: [deploy]
+                dependencies: [cloudformation]
+                sources:
+                  - build
+                parameters:
+                  bucket: investigations-dist
+
+
+name: CI
+on:
+  pull_request:
+    branches-ignore:
+      - dependency-updates
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+jobs:
+  CI:
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - uses: actions/checkout@v2
+      - uses: aws-actions/configure-aws-credentials@v1
+        with:
+          role-to-assume: ${{ secrets.GU_RIFF_RAFF_ROLE_ARN }}
+          aws-region: eu-west-1
+      - uses: actions/setup-node@v2 # This is required by cdk
+        with:
+          cache: 'yarn'
+          cache-dependency-path: 'cdk/yarn.lock'
+          node-version-file: '.nvmrc'
+      - uses: actions/setup-java@v2
+        with:
+          java-version: '11'
+          distribution: 'adopt'
+      - name: CI
+        run: |
+          LAST_TEAMCITY_BUILD=3006
+          export GITHUB_RUN_NUMBER=$(( $GITHUB_RUN_NUMBER + $LAST_TEAMCITY_BUILD ))
+          ./script/ci
