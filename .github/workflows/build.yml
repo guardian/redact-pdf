@@ -1,7 +1,10 @@
 name: build
 on:
+  pull_request:
   workflow_dispatch:
   push:
+    branches:
+      - main
 jobs:
   build:
     name: Build and upload to riffraff
@@ -12,7 +15,7 @@ jobs:
       contents: read
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
@@ -20,79 +23,39 @@ jobs:
           role-to-assume: ${{ secrets.GU_RIFF_RAFF_ROLE_ARN }}
           aws-region: eu-west-1
 
-      - name: Setup node
-        uses: guardian/actions-setup-node@v2.4.1
-
-      - run: npm install
-      - run: npm run build
-
-      - uses: guardian/actions-riff-raff@v1
-        name: upload to riffraff
+      - name: Setup node for CDK
+        uses: actions/setup-node@v2 # This is required by cdk
         with:
-          app: companies-house-stream-listener
+          cache: 'npm'
+          cache-dependency-path: 'cdk/package-lock.json'
+          node-version-file: '.nvmrc'
+
+      - name: Setup java
+        uses: actions/setup-java@v2
+        with:
+          java-version: '11'
+          distribution: 'adopt' 
+ 
+      - name: Build
+        run: |
+          ./script/build.sh
+          
+      - name: Upload to Riff-Raff
+        uses: guardian/actions-riff-raff@v2
+        with:
+          app: cv-redact-tool
           config: |
             stacks:
-              - investigations
+              - deploy
             regions:
               - eu-west-1
             allowedStages:
               - PROD
             deployments:
-              cloudformation:
-                type: cloud-formation
-                app: companies-house-stream-listener
-                sources:
-                  - cdk/cdk.out/CompaniesHouseStreamListener-PROD.template.json
-                parameters:
-                  prependStackToCloudFormationStackName: false
-                  templatePath: CompaniesHouseStreamListener-PROD.template.json
-                  amiParameter: AMICompanieshousestreamlistener
-                  amiTags:
-                    Recipe: investigations-node
-                    AmigoStage: PROD
-              companies-house-stream-listener:
+              cv-redact-tool:
                 type: autoscaling
                 actions: [deploy]
-                dependencies: [cloudformation]
                 sources:
                   - build
                 parameters:
-                  bucket: investigations-dist
-
-
-name: CI
-on:
-  pull_request:
-    branches-ignore:
-      - dependency-updates
-  workflow_dispatch:
-  push:
-    branches:
-      - main
-
-jobs:
-  CI:
-    runs-on: ubuntu-latest
-    permissions:
-      id-token: write
-      contents: read
-    steps:
-      - uses: actions/checkout@v2
-      - uses: aws-actions/configure-aws-credentials@v1
-        with:
-          role-to-assume: ${{ secrets.GU_RIFF_RAFF_ROLE_ARN }}
-          aws-region: eu-west-1
-      - uses: actions/setup-node@v2 # This is required by cdk
-        with:
-          cache: 'yarn'
-          cache-dependency-path: 'cdk/yarn.lock'
-          node-version-file: '.nvmrc'
-      - uses: actions/setup-java@v2
-        with:
-          java-version: '11'
-          distribution: 'adopt'
-      - name: CI
-        run: |
-          LAST_TEAMCITY_BUILD=3006
-          export GITHUB_RUN_NUMBER=$(( $GITHUB_RUN_NUMBER + $LAST_TEAMCITY_BUILD ))
-          ./script/ci
+                  bucket: cv-redact-tool-dist
