@@ -157,7 +157,7 @@ exports[`The CvRedactTool stack matches the snapshot 1`] = `
         "ImageId": {
           "Ref": "AMICvredacttool",
         },
-        "InstanceType": "t4g.large",
+        "InstanceType": "t4g.medium",
         "MetadataOptions": {
           "HttpTokens": "required",
         },
@@ -198,7 +198,7 @@ dpkg -i /cv-redact-tool/cv-redact-tool.deb",
     "CertificateCvredacttoolE4163ECA": {
       "DeletionPolicy": "Retain",
       "Properties": {
-        "DomainName": "cv-redact-tool.gutools.co.uk",
+        "DomainName": "cv-redact.gutools.co.uk",
         "Tags": [
           {
             "Key": "App",
@@ -835,9 +835,9 @@ dpkg -i /cv-redact-tool/cv-redact-tool.deb",
       },
       "Type": "AWS::EC2::SecurityGroup",
     },
-    "cvredacttoolgutoolscoukcert": {
+    "cvredactgutoolscoukcert": {
       "Properties": {
-        "Name": "cv-redact-tool.gutools.co.uk",
+        "Name": "cv-redact.gutools.co.uk",
         "RecordType": "CNAME",
         "ResourceRecords": [
           {

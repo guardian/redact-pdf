@@ -2,7 +2,7 @@
 name := """cv-redact-tool"""
 organization := "com.gu"
 
-version := "1.0-SNAPSHOT"
+version := "1.0"
 
 
 lazy val root = (project in file(".")).enablePlugins(PlayScala, JavaServerAppPackaging)
@@ -32,14 +32,14 @@ libraryDependencies ++= Seq(
 
 /* A debian package needs some mandatory settings to be valid */
 maintainer := "The Guardian engineering managers  <engineering.managers@theguardian.com>"
-packageSummary := "Online web app to redact cv"
-packageDescription := """"""
+Debian / packageSummary := "Online web app to redact cv"
+Debian / packageDescription := "Online web app to redact cv"
 
 /* While not mandatory it is still highly recommended to add relevant JRE package as a dependency */ 
-debianPackageDependencies := Seq("java11-runtime-headless")
+Debian / debianPackageDependencies := Seq("java11-runtime-headless")
 
 /* Configure the Java options with which the executable will be launched */
-javaOptions in Universal ++= Seq(
+Universal / javaOptions ++= Seq(
     // -J params will be added as jvm parameters
     "-J-Xmx2g",
     "-J-Xms2g",
