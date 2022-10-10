@@ -23,6 +23,11 @@ jobs:
           role-to-assume: ${{ secrets.GU_RIFF_RAFF_ROLE_ARN }}
           aws-region: eu-west-1
 
+      - name: Configure private infra config credentials
+        uses: guardian/actions-read-private-repos@v0.1.0
+        with:
+          private-ssh-keys: ${{ secrets.PRIVATE_INFRASTRUCTURE_CONFIG_DEPLOY_KEY }}
+
       - name: Setup node for CDK
         uses: actions/setup-node@v2 # This is required by cdk
         with:
