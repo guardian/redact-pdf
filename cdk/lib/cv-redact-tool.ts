@@ -26,7 +26,7 @@ export class CvRedactTool extends GuStack {
   constructor(scope: App, id: string, props: GuStackProps) {
     super(scope, id, props);
 
-    const domainName = 'cv-redact-tool.gutools.co.uk';  
+    const domainName = 'cv-redact.gutools.co.uk';  
 
     const ec2App = new GuEc2App(this, {
       applicationPort: 9000,
@@ -54,7 +54,7 @@ export class CvRedactTool extends GuStack {
       },
     });
 
-    new GuCname(this, 'cv-redact-tool.gutools.co.uk - cert', {
+    new GuCname(this, 'cv-redact.gutools.co.uk - cert', {
       app: CvRedactTool.app.app,
       domainName,
       ttl: Duration.hours(1),
