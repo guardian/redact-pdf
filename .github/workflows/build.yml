@@ -53,7 +53,7 @@ jobs:
           projectName: 'Hiring & Onboarding Tools::CV Redact' 
           config: |
             stacks:
-              - deploy
+              - hiring-and-onboarding
             regions:
               - eu-west-1
             allowedStages:
@@ -62,8 +62,6 @@ jobs:
               cv-redact-tool:
                 type: autoscaling
                 actions: [deploy]
-                sources:
-                  - build
                 parameters:
                   bucket: cv-redact-tool-dist
           contentDirectories: |
