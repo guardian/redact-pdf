@@ -30,6 +30,17 @@ libraryDependencies ++= Seq(
    The SBT settings below are used for the build of that package
  */
 
+/* use package name without version and `_all` */
+Debian / packageName := normalizedName.value
+
+Debian / packageBin := {
+  val originalFile = (Debian / packageBin).value
+  val newFile = file(originalFile.getParent) / (packageName + ".deb")
+  IO.move(originalFile, newFile)
+  newFile
+}
+
+
 /* A debian package needs some mandatory settings to be valid */
 maintainer := "The Guardian engineering managers  <engineering.managers@theguardian.com>"
 Debian / packageSummary := "Online web app to redact cv"
