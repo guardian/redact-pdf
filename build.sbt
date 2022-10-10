@@ -1,12 +1,16 @@
-name := """redact-pdf"""
+
+name := """cv-redact-tool"""
 organization := "com.gu"
 
 version := "1.0-SNAPSHOT"
-scalacOptions += "-deprecation"
 
-lazy val root = (project in file(".")).enablePlugins(PlayScala)
+
+lazy val root = (project in file(".")).enablePlugins(PlayScala, JavaServerAppPackaging)
+
 
 scalaVersion := "2.13.8"
+scalacOptions += "-deprecation"
+
 
 libraryDependencies ++= Seq(
   "org.scalatestplus.play" %% "scalatestplus-play" % "5.1.0" % Test,
@@ -18,4 +22,28 @@ libraryDependencies ++= Seq(
 
 // Adds additional packages into conf/routes
 // play.sbt.routes.RoutesKeys.routesImport += "com.gu.binders._"
-   
+
+/* 
+   Packaging settings section
+
+   We are using sbt-native-packager to build a debian package.
+   The SBT settings below are used for the build of that package
+ */
+
+/* A debian package needs some mandatory settings to be valid */
+maintainer := "The Guardian engineering managers  <engineering.managers@theguardian.com>"
+packageSummary := "Online web app to redact cv"
+packageDescription := """"""
+
+/* While not mandatory it is still highly recommended to add relevant JRE package as a dependency */ 
+debianPackageDependencies := Seq("java11-runtime-headless")
+
+/* Configure the Java options with which the executable will be launched */
+javaOptions in Universal ++= Seq(
+    // -J params will be added as jvm parameters
+    "-J-Xmx2g",
+    "-J-Xms2g",
+)
+
+
+
