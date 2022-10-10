@@ -65,3 +65,6 @@ jobs:
                   - build
                 parameters:
                   bucket: cv-redact-tool-dist
+          contentDirectories: |
+            cv-redact-tool:
+              - cv-redact-tool_1.0_all.deb
