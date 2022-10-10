@@ -1,3 +1,6 @@
+# sbt
+.bsp/sbt.json
+
 logs
 target
 /.idea
