@@ -38,7 +38,7 @@ jobs:
  
       - name: Build
         run: |
-          ./script/build.sh
+          ./scripts/build.sh
           
       - name: Upload to Riff-Raff
         uses: guardian/actions-riff-raff@v2
