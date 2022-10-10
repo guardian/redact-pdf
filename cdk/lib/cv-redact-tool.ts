@@ -35,7 +35,7 @@ export class CvRedactTool extends GuStack {
         scope: AccessScope.RESTRICTED,
         cidrRanges: [Peer.ipv4(GuardianPublicNetworks.London)],
       },
-      instanceType: InstanceType.of(InstanceClass.T4G, InstanceSize.LARGE),
+      instanceType: InstanceType.of(InstanceClass.T4G, InstanceSize.MEDIUM),
       certificateProps:{
         domainName,
       },
