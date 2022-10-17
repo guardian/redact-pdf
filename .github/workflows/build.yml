@@ -50,9 +50,10 @@ jobs:
         uses: guardian/actions-riff-raff@v2
         with:
           app: cv-redact-tool
+          projectName: 'Hiring & Onboarding Tools::CV Redact' 
           config: |
             stacks:
-              - deploy
+              - hiring-and-onboarding
             regions:
               - eu-west-1
             allowedStages:
@@ -61,10 +62,8 @@ jobs:
               cv-redact-tool:
                 type: autoscaling
                 actions: [deploy]
-                sources:
-                  - build
                 parameters:
                   bucket: cv-redact-tool-dist
           contentDirectories: |
             cv-redact-tool:
-              - target/cv-redact-tool_1.0_all.deb
+              - target/cv-redact-tool.deb
