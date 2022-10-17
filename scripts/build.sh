@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-sbt clean compile test debian:packageBin
+sbt clean compile test debian:packageBin normalisePackageName
 
 set -e
 

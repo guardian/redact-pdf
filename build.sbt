@@ -33,12 +33,20 @@ libraryDependencies ++= Seq(
 /* use package name without version and `_all` */
 Debian / packageName := normalizedName.value
 
-Debian / packageBin := {
-  val originalFile = (Debian / packageBin).value
-  val newFile = file(originalFile.getParent) / (packageName + ".deb")
-  IO.move(originalFile, newFile)
-  newFile
+
+/* normalise Debian package name */
+val normalisePackageName = taskKey[Unit]("Rename debian package name to be normalised")
+
+normalisePackageName := {
+  import Path._
+
+  val targetDirectory = (baseDirectory.value) / "target"
+  val debFile = (targetDirectory ** "*.deb").get().head
+  val newFile = file(debFile.getParent) / ((Debian / packageName).value + ".deb")
+
+  IO.move(debFile, newFile)
 }
+
 
 
 /* A debian package needs some mandatory settings to be valid */
