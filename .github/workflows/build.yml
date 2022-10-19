@@ -62,7 +62,7 @@ jobs:
               cv-redact-tool:
                 type: autoscaling
                 parameters:
-                  bucket: cv-redact-tool-dist
+                  bucketSsmLookup: true
           contentDirectories: |
             cv-redact-tool:
               - target/cv-redact-tool.deb
