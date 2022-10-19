@@ -62,6 +62,8 @@ Universal / javaOptions ++= Seq(
     // -J params will be added as jvm parameters
     "-J-Xmx2g",
     "-J-Xms2g",
+    // Remove the PID file
+    s"-Dpidfile.path=/dev/null",
 )
 
 
