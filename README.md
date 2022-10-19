@@ -12,6 +12,6 @@ There is a script to run the project locally. This starts the app with flags to 
 
 Run `./startapp.sh` in project root
 
-## Deploy to Heroku
+## Deploymemt
 
-[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
+This project is continously deployed using `riff-raff`. 
