@@ -61,7 +61,6 @@ jobs:
             deployments:
               cv-redact-tool:
                 type: autoscaling
-                actions: [deploy]
                 parameters:
                   bucket: cv-redact-tool-dist
           contentDirectories: |
