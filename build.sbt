@@ -5,7 +5,7 @@ organization := "com.gu"
 version := "1.0"
 
 
-lazy val root = (project in file(".")).enablePlugins(PlayScala, JavaServerAppPackaging)
+lazy val root = (project in file(".")).enablePlugins(PlayScala, JavaServerAppPackaging, SystemdPlugin)
 
 
 scalaVersion := "2.13.8"
@@ -62,6 +62,8 @@ Universal / javaOptions ++= Seq(
     // -J params will be added as jvm parameters
     "-J-Xmx2g",
     "-J-Xms2g",
+    // Remove the PID file
+    s"-Dpidfile.path=/dev/null",
 )
 
 

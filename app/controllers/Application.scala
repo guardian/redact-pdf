@@ -101,4 +101,9 @@ class Application(cc: ControllerComponents) extends AbstractController(cc) {
         "error" -> "Missing file")
     }
   }
+
+  def healthcheck = Action {
+    Ok("Ok")
+  }
+
 }
