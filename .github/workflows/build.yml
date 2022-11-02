@@ -63,6 +63,15 @@ jobs:
                 type: autoscaling
                 parameters:
                   bucketSsmLookup: true
+                dependencies:
+                  cv-redact-tool-ami-update    
+              cv-redact-tool-ami-update:
+                type: ami-cloudformation-parameter
+                parameters:
+                  amiEncrypted: true
+                  amiTags:
+                    Recipe: arm64-bionic-java11-deploy-infrastructure
+                    AmigoStage: PROD
           contentDirectories: |
             cv-redact-tool:
               - target/cv-redact-tool.deb
