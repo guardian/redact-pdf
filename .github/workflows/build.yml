@@ -64,7 +64,7 @@ jobs:
                 parameters:
                   bucketSsmLookup: true
                 dependencies:
-                  cv-redact-tool-ami-update    
+                  - cv-redact-tool-ami-update    
               cv-redact-tool-ami-update:
                 type: ami-cloudformation-parameter
                 parameters:
