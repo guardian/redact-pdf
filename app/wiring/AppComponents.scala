@@ -7,17 +7,19 @@ import controllers.{AssetsComponents, Application}
 import play.api.mvc.EssentialFilter
 import play.filters.brotli.BrotliFilter
 import play.filters.brotli.BrotliFilterComponents
+import play.filters.gzip.GzipFilterComponents
 import play.filters.HttpFiltersComponents
 import play.filters.hosts.AllowedHostsFilter
 
 trait AppComponents extends AssetsComponents
   with HttpFiltersComponents
+  with GzipFilterComponents
   with BrotliFilterComponents {
   self: BuiltInComponentsFromContext =>
 
   implicit val as: ActorSystem = actorSystem
 
-  override def httpFilters: Seq[EssentialFilter] = brotliFilter +: super.httpFilters.filterNot(_.getClass == classOf[AllowedHostsFilter])
+  override def httpFilters: Seq[EssentialFilter] = brotliFilter +: gzipFilter +: super.httpFilters.filterNot(_.getClass == classOf[AllowedHostsFilter])
 
   lazy val assetController = new controllers.Assets(httpErrorHandler, assetsMetadata)
 
