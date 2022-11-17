@@ -64,10 +64,12 @@ jobs:
                 parameters:
                   bucketSsmLookup: true
                 dependencies:
-                  cv-redact-tool-ami-update    
+                  - cv-redact-tool-ami-update    
               cv-redact-tool-ami-update:
+                app: cv-redact-tool
                 type: ami-cloudformation-parameter
                 parameters:
+                  amiParameter: AMICvredacttool
                   amiEncrypted: true
                   amiTags:
                     Recipe: arm64-bionic-java11-deploy-infrastructure
