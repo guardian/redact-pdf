@@ -69,6 +69,7 @@ jobs:
                 app: cv-redact-tool
                 type: ami-cloudformation-parameter
                 parameters:
+                  amiParameter: AMICvredacttool
                   amiEncrypted: true
                   amiTags:
                     Recipe: arm64-bionic-java11-deploy-infrastructure
