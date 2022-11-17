@@ -66,6 +66,7 @@ jobs:
                 dependencies:
                   - cv-redact-tool-ami-update    
               cv-redact-tool-ami-update:
+                app: cv-redact-tool
                 type: ami-cloudformation-parameter
                 parameters:
                   amiEncrypted: true
