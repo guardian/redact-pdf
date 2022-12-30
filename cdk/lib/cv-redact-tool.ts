@@ -52,6 +52,7 @@ export class CvRedactTool extends GuStack {
           minimumInstances: 1,
           maximumInstances: 2,
       },
+      applicationLogging: { enabled: true },
     });
 
     new GuCname(this, 'cv-redact.gutools.co.uk - cert', {

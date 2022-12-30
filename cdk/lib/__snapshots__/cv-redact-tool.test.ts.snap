@@ -124,6 +124,11 @@ exports[`The CvRedactTool stack matches the snapshot 1`] = `
             "PropagateAtLaunch": true,
             "Value": "TEST",
           },
+          {
+            "Key": "SystemdUnit",
+            "PropagateAtLaunch": true,
+            "Value": "cv-redact-tool.service",
+          },
         ],
         "TargetGroupARNs": [
           {
