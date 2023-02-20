@@ -4,12 +4,12 @@ exports[`The CvRedactTool stack matches the snapshot 1`] = `
 {
   "Metadata": {
     "gu:cdk:constructs": [
-      "GuEc2App",
       "GuVpcParameter",
       "GuSubnetListParameter",
+      "GuSubnetListParameter",
+      "GuEc2App",
       "GuCertificate",
       "GuInstanceRole",
-      "GuSSMRunCommandPolicy",
       "GuDescribeEC2Policy",
       "GuLoggingStreamNameParameter",
       "GuLogShippingPolicy",
@@ -20,7 +20,6 @@ exports[`The CvRedactTool stack matches the snapshot 1`] = `
       "GuHttpsEgressSecurityGroup",
       "GuAutoScalingGroup",
       "GuWazuhAccess",
-      "GuSubnetListParameter",
       "GuApplicationLoadBalancer",
       "GuApplicationTargetGroup",
       "GuHttpsApplicationListener",
@@ -86,11 +85,6 @@ exports[`The CvRedactTool stack matches the snapshot 1`] = `
             "Key": "App",
             "PropagateAtLaunch": true,
             "Value": "cv-redact-tool",
-          },
-          {
-            "Key": "gu:cdk:pattern-name",
-            "PropagateAtLaunch": true,
-            "Value": "GuEc2App",
           },
           {
             "Key": "gu:cdk:version",
@@ -216,6 +210,10 @@ dpkg -i /cv-redact-tool/cv-redact-tool.deb",
           {
             "Key": "gu:repo",
             "Value": "guardian/redact-pdf",
+          },
+          {
+            "Key": "Name",
+            "Value": "CvRedactTool/CertificateCvredacttool",
           },
           {
             "Key": "Stack",
@@ -421,22 +419,26 @@ dpkg -i /cv-redact-tool/cv-redact-tool.deb",
               "Action": "sts:AssumeRole",
               "Effect": "Allow",
               "Principal": {
-                "Service": {
-                  "Fn::Join": [
-                    "",
-                    [
-                      "ec2.",
-                      {
-                        "Ref": "AWS::URLSuffix",
-                      },
-                    ],
-                  ],
-                },
+                "Service": "ec2.amazonaws.com",
               },
             },
           ],
           "Version": "2012-10-17",
         },
+        "ManagedPolicyArns": [
+          {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition",
+                },
+                ":iam::aws:policy/AmazonSSMManagedInstanceCore",
+              ],
+            ],
+          },
+        ],
         "Path": "/",
         "Tags": [
           {
@@ -656,8 +658,8 @@ dpkg -i /cv-redact-tool/cv-redact-tool.deb",
         "GroupDescription": "Allow restricted ingress from CIDR ranges",
         "SecurityGroupIngress": [
           {
-            "CidrIp": "77.91.248.0/21",
-            "Description": "Allow access on port 443 from 77.91.248.0/21",
+            "CidrIp": "192.168.1.1/22",
+            "Description": "Allow access on port 443 from 192.168.1.1/22",
             "FromPort": 443,
             "IpProtocol": "tcp",
             "ToPort": 443,
@@ -711,42 +713,6 @@ dpkg -i /cv-redact-tool/cv-redact-tool.deb",
         "ToPort": 9000,
       },
       "Type": "AWS::EC2::SecurityGroupEgress",
-    },
-    "SSMRunCommandPolicy244E1613": {
-      "Properties": {
-        "PolicyDocument": {
-          "Statement": [
-            {
-              "Action": [
-                "ec2messages:AcknowledgeMessage",
-                "ec2messages:DeleteMessage",
-                "ec2messages:FailMessage",
-                "ec2messages:GetEndpoint",
-                "ec2messages:GetMessages",
-                "ec2messages:SendReply",
-                "ssm:UpdateInstanceInformation",
-                "ssm:ListInstanceAssociations",
-                "ssm:DescribeInstanceProperties",
-                "ssm:DescribeDocumentParameters",
-                "ssmmessages:CreateControlChannel",
-                "ssmmessages:CreateDataChannel",
-                "ssmmessages:OpenControlChannel",
-                "ssmmessages:OpenDataChannel",
-              ],
-              "Effect": "Allow",
-              "Resource": "*",
-            },
-          ],
-          "Version": "2012-10-17",
-        },
-        "PolicyName": "ssm-run-command-policy",
-        "Roles": [
-          {
-            "Ref": "InstanceRoleCvredacttool834C6B7C",
-          },
-        ],
-      },
-      "Type": "AWS::IAM::Policy",
     },
     "TargetGroupCvredacttool7CFB08A2": {
       "Properties": {
