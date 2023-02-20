@@ -103,7 +103,7 @@ class Application(cc: ControllerComponents) extends AbstractController(cc) {
   }
 
   def healthcheck = Action {
+    logger.info("Responding OK from healthcheck")
     Ok("Ok")
   }
-
 }
