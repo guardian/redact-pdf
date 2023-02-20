@@ -38,19 +38,19 @@ jobs:
       - name: Setup java
         uses: actions/setup-java@v3
         with:
-          distribution: 'adopt'
+          distribution: 'corretto'
           java-version: '11'
           cache: 'sbt'
- 
+
       - name: Build
         run: |
           ./scripts/build.sh
-          
+
       - name: Upload to Riff-Raff
         uses: guardian/actions-riff-raff@v2
         with:
           app: cv-redact-tool
-          projectName: 'Hiring & Onboarding Tools::CV Redact' 
+          projectName: 'Hiring & Onboarding Tools::CV Redact'
           config: |
             stacks:
               - hiring-and-onboarding
