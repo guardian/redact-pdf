@@ -49,7 +49,6 @@ jobs:
       - name: Upload to Riff-Raff
         uses: guardian/actions-riff-raff@v2
         with:
-          app: cv-redact-tool
           projectName: 'Hiring & Onboarding Tools::CV Redact'
           config: |
             stacks:
