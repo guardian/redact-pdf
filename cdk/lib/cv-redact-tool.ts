@@ -1,4 +1,3 @@
-import { join } from "path";
 import {GuEc2App} from "@guardian/cdk";
 import { AccessScope } from '@guardian/cdk/lib/constants';
 import type { GuStackProps } from "@guardian/cdk/lib/constructs/core";
@@ -14,11 +13,10 @@ import {
   InstanceType,
   Peer,
 } from 'aws-cdk-lib/aws-ec2';
-import { CfnInclude } from "aws-cdk-lib/cloudformation-include";
 
 
 export class CvRedactTool extends GuStack {
-  
+
   private static app: AppIdentity = {
     app: 'cv-redact-tool',
   };
@@ -26,7 +24,7 @@ export class CvRedactTool extends GuStack {
   constructor(scope: App, id: string, props: GuStackProps) {
     super(scope, id, props);
 
-    const domainName = 'cv-redact.gutools.co.uk';  
+    const domainName = 'cv-redact.gutools.co.uk';
 
     const ec2App = new GuEc2App(this, {
       applicationPort: 9000,
