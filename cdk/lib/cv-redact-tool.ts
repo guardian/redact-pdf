@@ -49,6 +49,10 @@ export class CvRedactTool extends GuStack {
 				maximumInstances: 2,
 			},
 			applicationLogging: { enabled: true },
+			imageRecipe: {
+				Recipe: 'arm64-bionic-java11-deploy-infrastructure',
+				Encrypted: true,
+			},
 		});
 
 		new GuCname(this, 'cv-redact.gutools.co.uk - cert', {
