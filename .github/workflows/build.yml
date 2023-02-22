@@ -71,7 +71,7 @@ jobs:
                   amiParameter: AMICvredacttool
                   amiEncrypted: true
                   amiTags:
-                    Recipe: arm64-focal-java11-deploy-infrastructure
+                    Recipe: developerPlayground-arm64-java11
                     AmigoStage: PROD
           contentDirectories: |
             cv-redact-tool:
