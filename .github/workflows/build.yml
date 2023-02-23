@@ -50,29 +50,9 @@ jobs:
         uses: guardian/actions-riff-raff@v2
         with:
           projectName: 'Hiring & Onboarding Tools::CV Redact'
-          config: |
-            stacks:
-              - hiring-and-onboarding
-            regions:
-              - eu-west-1
-            allowedStages:
-              - PROD
-            deployments:
-              cv-redact-tool:
-                type: autoscaling
-                parameters:
-                  bucketSsmLookup: true
-                dependencies:
-                  - cv-redact-tool-ami-update    
-              cv-redact-tool-ami-update:
-                app: cv-redact-tool
-                type: ami-cloudformation-parameter
-                parameters:
-                  amiParameter: AMICvredacttool
-                  amiEncrypted: true
-                  amiTags:
-                    Recipe: developerPlayground-arm64-java11
-                    AmigoStage: PROD
+          configPath: cdk/cdk.out/riff-raff.yaml
           contentDirectories: |
+            cdk.out:
+              - cdk/cdk.out
             cv-redact-tool:
               - target/cv-redact-tool.deb
