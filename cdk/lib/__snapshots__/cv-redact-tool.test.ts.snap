@@ -23,7 +23,6 @@ exports[`The CvRedactTool stack matches the snapshot 1`] = `
       "GuApplicationLoadBalancer",
       "GuApplicationTargetGroup",
       "GuHttpsApplicationListener",
-      "GuSecurityGroup",
       "GuCname",
     ],
     "gu:cdk:version": "TEST",
@@ -348,27 +347,6 @@ dpkg -i /cv-redact-tool/cv-redact-tool.deb",
       },
       "Type": "AWS::EC2::SecurityGroupIngress",
     },
-    "GuHttpsEgressSecurityGroupCvredacttoolfromCvRedactToolRestrictedIngressSecurityGroupCvredacttool4BBBB3C290003AD5756F": {
-      "Properties": {
-        "Description": "Load balancer to target",
-        "FromPort": 9000,
-        "GroupId": {
-          "Fn::GetAtt": [
-            "GuHttpsEgressSecurityGroupCvredacttoolC927B32A",
-            "GroupId",
-          ],
-        },
-        "IpProtocol": "tcp",
-        "SourceSecurityGroupId": {
-          "Fn::GetAtt": [
-            "RestrictedIngressSecurityGroupCvredacttool0BE7E8D5",
-            "GroupId",
-          ],
-        },
-        "ToPort": 9000,
-      },
-      "Type": "AWS::EC2::SecurityGroupIngress",
-    },
     "GuLogShippingPolicy981BFE5A": {
       "Properties": {
         "PolicyDocument": {
@@ -506,12 +484,6 @@ dpkg -i /cv-redact-tool/cv-redact-tool.deb",
               "GroupId",
             ],
           },
-          {
-            "Fn::GetAtt": [
-              "RestrictedIngressSecurityGroupCvredacttool0BE7E8D5",
-              "GroupId",
-            ],
-          },
         ],
         "Subnets": {
           "Ref": "cvredacttoolPublicSubnets",
@@ -545,6 +517,15 @@ dpkg -i /cv-redact-tool/cv-redact-tool.deb",
     "LoadBalancerCvredacttoolSecurityGroup0F680A12": {
       "Properties": {
         "GroupDescription": "Automatically created Security Group for ELB CvRedactToolLoadBalancerCvredacttool1A38816C",
+        "SecurityGroupIngress": [
+          {
+            "CidrIp": "0.0.0.0/0",
+            "Description": "Allow from anyone on port 443",
+            "FromPort": 443,
+            "IpProtocol": "tcp",
+            "ToPort": 443,
+          },
+        ],
         "Tags": [
           {
             "Key": "App",
@@ -652,67 +633,6 @@ dpkg -i /cv-redact-tool/cv-redact-tool.deb",
         ],
       },
       "Type": "AWS::IAM::Policy",
-    },
-    "RestrictedIngressSecurityGroupCvredacttool0BE7E8D5": {
-      "Properties": {
-        "GroupDescription": "Allow restricted ingress from CIDR ranges",
-        "SecurityGroupIngress": [
-          {
-            "CidrIp": "192.168.1.1/22",
-            "Description": "Allow access on port 443 from 192.168.1.1/22",
-            "FromPort": 443,
-            "IpProtocol": "tcp",
-            "ToPort": 443,
-          },
-        ],
-        "Tags": [
-          {
-            "Key": "App",
-            "Value": "cv-redact-tool",
-          },
-          {
-            "Key": "gu:cdk:version",
-            "Value": "TEST",
-          },
-          {
-            "Key": "gu:repo",
-            "Value": "guardian/redact-pdf",
-          },
-          {
-            "Key": "Stack",
-            "Value": "hiring-and-onboarding",
-          },
-          {
-            "Key": "Stage",
-            "Value": "TEST",
-          },
-        ],
-        "VpcId": {
-          "Ref": "VpcId",
-        },
-      },
-      "Type": "AWS::EC2::SecurityGroup",
-    },
-    "RestrictedIngressSecurityGroupCvredacttooltoCvRedactToolGuHttpsEgressSecurityGroupCvredacttool9B3EFE5A900020946770": {
-      "Properties": {
-        "Description": "Load balancer to target",
-        "DestinationSecurityGroupId": {
-          "Fn::GetAtt": [
-            "GuHttpsEgressSecurityGroupCvredacttoolC927B32A",
-            "GroupId",
-          ],
-        },
-        "FromPort": 9000,
-        "GroupId": {
-          "Fn::GetAtt": [
-            "RestrictedIngressSecurityGroupCvredacttool0BE7E8D5",
-            "GroupId",
-          ],
-        },
-        "IpProtocol": "tcp",
-        "ToPort": 9000,
-      },
-      "Type": "AWS::EC2::SecurityGroupEgress",
     },
     "TargetGroupCvredacttool7CFB08A2": {
       "Properties": {
