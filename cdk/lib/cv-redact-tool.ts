@@ -4,7 +4,6 @@ import type { GuStackProps } from '@guardian/cdk/lib/constructs/core';
 import { GuStack } from '@guardian/cdk/lib/constructs/core';
 import type { AppIdentity } from '@guardian/cdk/lib/constructs/core/identity';
 import { GuCname } from '@guardian/cdk/lib/constructs/dns';
-import { GuardianPublicNetworks } from '@guardian/private-infrastructure-config';
 import { Duration } from 'aws-cdk-lib';
 import type { App } from 'aws-cdk-lib';
 import {
@@ -28,8 +27,7 @@ export class CvRedactTool extends GuStack {
 			applicationPort: 9000,
 			app: 'cv-redact-tool',
 			access: {
-				scope: AccessScope.RESTRICTED,
-				cidrRanges: [Peer.ipv4(GuardianPublicNetworks.London)],
+				scope: AccessScope.PUBLIC,
 			},
 			instanceType: InstanceType.of(InstanceClass.T4G, InstanceSize.MEDIUM),
 			certificateProps: {

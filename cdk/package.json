@@ -15,7 +15,6 @@
     "@guardian/cdk": "49.3.0",
     "@guardian/eslint-config-typescript": "1.0.11",
     "@guardian/prettier": "1.0.0",
-    "@guardian/private-infrastructure-config": "github:guardian/private-infrastructure-config#v2.0.0",
     "@types/jest": "^29.1.1",
     "@types/node": "18.8.0",
     "aws-cdk": "2.64.0",
@@ -37,7 +36,6 @@
     "transform": {
       "^.+\\.tsx?$": "ts-jest"
     },
-    "transformIgnorePatterns": ["node_modules/(?!@guardian/private-infrastructure-config)"],
     "setupFilesAfterEnv": [
       "./jest.setup.js"
     ]
