@@ -5,6 +5,7 @@ import play.api.mvc._
 import redact.PdfRedactor
 import play.api.data._
 import play.api.data.Forms._
+import play.api.libs.Files
 import java.nio.file.Paths
 import java.util.zip.ZipOutputStream
 import java.util.zip.ZipEntry
@@ -18,13 +19,16 @@ class Application(cc: ControllerComponents) extends AbstractController(cc) {
 
   val logger = Logger(this.getClass())
 
-  implicit val ec = cc.executionContext
+  implicit val ec: scala.concurrent.ExecutionContext = cc.executionContext
 
   def index() = Action { implicit request: Request[AnyContent] =>
     Ok(views.html.index())
   }
 
   case class UserData(name: String)
+  object UserData {
+    def unapply(u: UserData): Option[(String)] = Some(u.name)
+  }
 
   val userForm = Form(
     mapping(
@@ -32,7 +36,7 @@ class Application(cc: ControllerComponents) extends AbstractController(cc) {
     )(UserData.apply)(UserData.unapply)
   )
 
-  def upload = Action(parse.multipartFormData) { implicit request =>
+  def upload: Action[MultipartFormData[Files.TemporaryFile]] = Action(parse.multipartFormData) { implicit request =>
     request.body.file("pdf").map { pdf =>
       userForm.bindFromRequest().fold(
         { formWithErrors => BadRequest },
@@ -57,7 +61,13 @@ class Application(cc: ControllerComponents) extends AbstractController(cc) {
 
   private def quoteString(s: String) = "\"" + s + "\""
 
-  def importFromTaleo = Action(parse.multipartFormData) { implicit request =>
+
+  class ControlledCloseZipOutputStream(os: java.io.OutputStream) extends ZipOutputStream(os) {
+    override def close(): Unit = { }
+    def closeNow(): Unit = super.close()
+  }
+
+  def importFromTaleo: Action[MultipartFormData[Files.TemporaryFile]] = Action(parse.multipartFormData) { implicit request =>
     request.body.file("pdf").map { pdf =>
       val candidates = PdfRedactor.candidates(pdf.ref)
       val doc = PDDocument.load(pdf.ref)
@@ -67,11 +77,7 @@ class Application(cc: ControllerComponents) extends AbstractController(cc) {
 
       val stream = StreamConverters.asOutputStream().mapMaterializedValue { outputStream =>
         Future {
-          val zos = new ZipOutputStream(outputStream) {
-            override def close(): Unit = { }
-
-            def closeNow(): Unit = super.close()
-          }
+          val zos = new ControlledCloseZipOutputStream(outputStream) 
 
           docs.foreach { case (candidate, doc) =>
             val entryName = s"anon-candidates/${candidate.id}-redact.pdf"
