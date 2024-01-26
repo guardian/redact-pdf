@@ -18,8 +18,8 @@ exports[`The CvRedactTool stack matches the snapshot 1`] = `
       "GuParameterStoreReadPolicy",
       "GuAmiParameter",
       "GuHttpsEgressSecurityGroup",
-      "GuAutoScalingGroup",
       "GuWazuhAccess",
+      "GuAutoScalingGroup",
       "GuApplicationLoadBalancer",
       "GuApplicationTargetGroup",
       "GuHttpsApplicationListener",
@@ -74,8 +74,16 @@ exports[`The CvRedactTool stack matches the snapshot 1`] = `
       "Properties": {
         "HealthCheckGracePeriod": 120,
         "HealthCheckType": "ELB",
-        "LaunchConfigurationName": {
-          "Ref": "AutoScalingGroupCvredacttoolLaunchConfigE6E070A0",
+        "LaunchTemplate": {
+          "LaunchTemplateId": {
+            "Ref": "hiringandonboardingTESTcvredacttool73EFBEF9",
+          },
+          "Version": {
+            "Fn::GetAtt": [
+              "hiringandonboardingTESTcvredacttool73EFBEF9",
+              "LatestVersionNumber",
+            ],
+          },
         },
         "MaxSize": "2",
         "MinSize": "1",
@@ -103,11 +111,6 @@ exports[`The CvRedactTool stack matches the snapshot 1`] = `
             },
           },
           {
-            "Key": "Name",
-            "PropagateAtLaunch": true,
-            "Value": "CvRedactTool/AutoScalingGroupCvredacttool",
-          },
-          {
             "Key": "Stack",
             "PropagateAtLaunch": true,
             "Value": "hiring-and-onboarding",
@@ -133,65 +136,6 @@ exports[`The CvRedactTool stack matches the snapshot 1`] = `
         },
       },
       "Type": "AWS::AutoScaling::AutoScalingGroup",
-    },
-    "AutoScalingGroupCvredacttoolInstanceProfileF2AD0183": {
-      "Properties": {
-        "Roles": [
-          {
-            "Ref": "InstanceRoleCvredacttool834C6B7C",
-          },
-        ],
-      },
-      "Type": "AWS::IAM::InstanceProfile",
-    },
-    "AutoScalingGroupCvredacttoolLaunchConfigE6E070A0": {
-      "DependsOn": [
-        "InstanceRoleCvredacttool834C6B7C",
-      ],
-      "Properties": {
-        "IamInstanceProfile": {
-          "Ref": "AutoScalingGroupCvredacttoolInstanceProfileF2AD0183",
-        },
-        "ImageId": {
-          "Ref": "AMICvredacttool",
-        },
-        "InstanceType": "t4g.medium",
-        "MetadataOptions": {
-          "HttpTokens": "required",
-        },
-        "SecurityGroups": [
-          {
-            "Fn::GetAtt": [
-              "GuHttpsEgressSecurityGroupCvredacttoolC927B32A",
-              "GroupId",
-            ],
-          },
-          {
-            "Fn::GetAtt": [
-              "WazuhSecurityGroup",
-              "GroupId",
-            ],
-          },
-        ],
-        "UserData": {
-          "Fn::Base64": {
-            "Fn::Join": [
-              "",
-              [
-                "#!/bin/bash
-mkdir -p $(dirname '/cv-redact-tool/cv-redact-tool.deb')
-aws s3 cp 's3://",
-                {
-                  "Ref": "DistributionBucketName",
-                },
-                "/hiring-and-onboarding/TEST/cv-redact-tool/cv-redact-tool.deb' '/cv-redact-tool/cv-redact-tool.deb'
-dpkg -i /cv-redact-tool/cv-redact-tool.deb",
-              ],
-            ],
-          },
-        },
-      },
-      "Type": "AWS::AutoScaling::LaunchConfiguration",
     },
     "CertificateCvredacttoolE4163ECA": {
       "DeletionPolicy": "Retain",
@@ -575,6 +519,27 @@ dpkg -i /cv-redact-tool/cv-redact-tool.deb",
       },
       "Type": "AWS::EC2::SecurityGroupEgress",
     },
+    "LoadBalancerCvredacttoolSecurityGrouptoCvRedactToolWazuhSecurityGroup35ECA9FC9000D3EB6817": {
+      "Properties": {
+        "Description": "Load balancer to target",
+        "DestinationSecurityGroupId": {
+          "Fn::GetAtt": [
+            "WazuhSecurityGroup",
+            "GroupId",
+          ],
+        },
+        "FromPort": 9000,
+        "GroupId": {
+          "Fn::GetAtt": [
+            "LoadBalancerCvredacttoolSecurityGroup0F680A12",
+            "GroupId",
+          ],
+        },
+        "IpProtocol": "tcp",
+        "ToPort": 9000,
+      },
+      "Type": "AWS::EC2::SecurityGroupEgress",
+    },
     "ParameterStoreReadCvredacttool68C8833D": {
       "Properties": {
         "PolicyDocument": {
@@ -726,6 +691,27 @@ dpkg -i /cv-redact-tool/cv-redact-tool.deb",
       },
       "Type": "AWS::EC2::SecurityGroup",
     },
+    "WazuhSecurityGroupfromCvRedactToolLoadBalancerCvredacttoolSecurityGroup24E444F09000A56A27DF": {
+      "Properties": {
+        "Description": "Load balancer to target",
+        "FromPort": 9000,
+        "GroupId": {
+          "Fn::GetAtt": [
+            "WazuhSecurityGroup",
+            "GroupId",
+          ],
+        },
+        "IpProtocol": "tcp",
+        "SourceSecurityGroupId": {
+          "Fn::GetAtt": [
+            "LoadBalancerCvredacttoolSecurityGroup0F680A12",
+            "GroupId",
+          ],
+        },
+        "ToPort": 9000,
+      },
+      "Type": "AWS::EC2::SecurityGroupIngress",
+    },
     "cvredactgutoolscoukcert": {
       "Properties": {
         "Name": "cv-redact.gutools.co.uk",
@@ -742,6 +728,151 @@ dpkg -i /cv-redact-tool/cv-redact-tool.deb",
         "TTL": 3600,
       },
       "Type": "Guardian::DNS::RecordSet",
+    },
+    "hiringandonboardingTESTcvredacttool73EFBEF9": {
+      "DependsOn": [
+        "InstanceRoleCvredacttool834C6B7C",
+      ],
+      "Properties": {
+        "LaunchTemplateData": {
+          "IamInstanceProfile": {
+            "Arn": {
+              "Fn::GetAtt": [
+                "hiringandonboardingTESTcvredacttoolProfile2BF7A143",
+                "Arn",
+              ],
+            },
+          },
+          "ImageId": {
+            "Ref": "AMICvredacttool",
+          },
+          "InstanceType": "t4g.medium",
+          "MetadataOptions": {
+            "HttpTokens": "required",
+          },
+          "SecurityGroupIds": [
+            {
+              "Fn::GetAtt": [
+                "GuHttpsEgressSecurityGroupCvredacttoolC927B32A",
+                "GroupId",
+              ],
+            },
+            {
+              "Fn::GetAtt": [
+                "WazuhSecurityGroup",
+                "GroupId",
+              ],
+            },
+          ],
+          "TagSpecifications": [
+            {
+              "ResourceType": "instance",
+              "Tags": [
+                {
+                  "Key": "gu:cdk:version",
+                  "Value": "TEST",
+                },
+                {
+                  "Key": "gu:repo",
+                  "Value": "guardian/redact-pdf",
+                },
+                {
+                  "Key": "Name",
+                  "Value": "CvRedactTool/hiring-and-onboarding-TEST-cv-redact-tool",
+                },
+                {
+                  "Key": "Stack",
+                  "Value": "hiring-and-onboarding",
+                },
+                {
+                  "Key": "Stage",
+                  "Value": "TEST",
+                },
+              ],
+            },
+            {
+              "ResourceType": "volume",
+              "Tags": [
+                {
+                  "Key": "gu:cdk:version",
+                  "Value": "TEST",
+                },
+                {
+                  "Key": "gu:repo",
+                  "Value": "guardian/redact-pdf",
+                },
+                {
+                  "Key": "Name",
+                  "Value": "CvRedactTool/hiring-and-onboarding-TEST-cv-redact-tool",
+                },
+                {
+                  "Key": "Stack",
+                  "Value": "hiring-and-onboarding",
+                },
+                {
+                  "Key": "Stage",
+                  "Value": "TEST",
+                },
+              ],
+            },
+          ],
+          "UserData": {
+            "Fn::Base64": {
+              "Fn::Join": [
+                "",
+                [
+                  "#!/bin/bash
+mkdir -p $(dirname '/cv-redact-tool/cv-redact-tool.deb')
+aws s3 cp 's3://",
+                  {
+                    "Ref": "DistributionBucketName",
+                  },
+                  "/hiring-and-onboarding/TEST/cv-redact-tool/cv-redact-tool.deb' '/cv-redact-tool/cv-redact-tool.deb'
+dpkg -i /cv-redact-tool/cv-redact-tool.deb",
+                ],
+              ],
+            },
+          },
+        },
+        "TagSpecifications": [
+          {
+            "ResourceType": "launch-template",
+            "Tags": [
+              {
+                "Key": "gu:cdk:version",
+                "Value": "TEST",
+              },
+              {
+                "Key": "gu:repo",
+                "Value": "guardian/redact-pdf",
+              },
+              {
+                "Key": "Name",
+                "Value": "CvRedactTool/hiring-and-onboarding-TEST-cv-redact-tool",
+              },
+              {
+                "Key": "Stack",
+                "Value": "hiring-and-onboarding",
+              },
+              {
+                "Key": "Stage",
+                "Value": "TEST",
+              },
+            ],
+          },
+        ],
+      },
+      "Type": "AWS::EC2::LaunchTemplate",
+    },
+    "hiringandonboardingTESTcvredacttoolProfile2BF7A143": {
+      "Properties": {
+        "Roles": [
+          {
+            "Ref": "InstanceRoleCvredacttool834C6B7C",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::InstanceProfile",
     },
   },
 }
