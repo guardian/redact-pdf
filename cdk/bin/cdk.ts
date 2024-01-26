@@ -1,8 +1,8 @@
 import 'source-map-support/register';
-import { GuRootExperimental } from '@guardian/cdk/lib/experimental/constructs';
+import { GuRoot } from '@guardian/cdk/lib/constructs/root';
 import { CvRedactTool } from '../lib/cv-redact-tool';
 
-const app = new GuRootExperimental();
+const app = new GuRoot();
 new CvRedactTool(app, 'CvRedactTool-PROD', {
 	stack: 'hiring-and-onboarding',
 	stage: 'PROD',
