@@ -20,9 +20,9 @@ trait AppComponents extends AssetsComponents
   implicit val as: ActorSystem = actorSystem
 
   /* play framework apply filters from right to left, so brotli needs to be first */
-  override def httpFilters: Seq[EssentialFilter] =  gzipFilter +: /*brotliFilter +:*/ super.httpFilters.filterNot(_.getClass == classOf[AllowedHostsFilter])
+  override def httpFilters: Seq[EssentialFilter] =  gzipFilter +: brotliFilter +: super.httpFilters.filterNot(_.getClass == classOf[AllowedHostsFilter])
 
-  lazy val assetController = new controllers.Assets(httpErrorHandler, assetsMetadata)
+  lazy val assetController = new controllers.Assets(httpErrorHandler, assetsMetadata, environment)
 
   override lazy val router: Router = new _root_.router.Routes(
     httpErrorHandler,
