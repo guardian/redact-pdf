@@ -56,7 +56,7 @@ Debian / packageSummary := "Online web app to redact cv"
 Debian / packageDescription := "Online web app to redact cv"
 
 /* While not mandatory it is still highly recommended to add relevant JRE package as a dependency */ 
-Debian / debianPackageDependencies := Seq("java11-runtime-headless")
+Debian / debianPackageDependencies := Seq("java21-runtime-headless")
 
 /* Configure the Java options with which the executable will be launched */
 Universal / javaOptions ++= Seq(
