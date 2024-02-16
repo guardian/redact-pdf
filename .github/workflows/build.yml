@@ -13,15 +13,10 @@ jobs:
     permissions:
       id-token: write
       contents: read
+      pull-requests: write # required since guardian/actions-riff-raff@v3
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          role-to-assume: ${{ secrets.GU_RIFF_RAFF_ROLE_ARN }}
-          aws-region: eu-west-1
 
       - name: Configure private infra config credentials
         uses: guardian/actions-read-private-repos@v0.1.0
@@ -47,8 +42,10 @@ jobs:
           ./scripts/build.sh
 
       - name: Upload to Riff-Raff
-        uses: guardian/actions-riff-raff@v2
+        uses: guardian/actions-riff-raff@v4
         with:
+          roleArn: ${{ secrets.GU_RIFF_RAFF_ROLE_ARN }}
+          githubToken: ${{ secrets.GITHUB_TOKEN }}
           projectName: 'Hiring & Onboarding Tools::CV Redact'
           configPath: cdk/cdk.out/riff-raff.yaml
           contentDirectories: |
