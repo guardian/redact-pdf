@@ -8,7 +8,7 @@ version := "1.0"
 lazy val root = (project in file(".")).enablePlugins(PlayScala, JavaServerAppPackaging, SystemdPlugin)
 
 
-scalaVersion := "3.3.1"
+scalaVersion := "3.3.3"
 scalacOptions += "-deprecation"
 
 
