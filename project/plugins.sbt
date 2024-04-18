@@ -1,6 +1,6 @@
 addSbtPlugin("com.typesafe.play" % "sbt-plugin" % "2.9.1")
 
-addSbtPlugin("com.github.sbt" % "sbt-native-packager" % "1.9.16")
+addSbtPlugin("com.github.sbt" % "sbt-native-packager" % "1.10.0")
 
 /* 
    The following is needed because scala-xml has not be updated to 2.x in sbt yet but has in sbt-native-packager 
