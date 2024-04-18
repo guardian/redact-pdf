@@ -1,6 +1,6 @@
 package wiring
 
-import akka.actor.ActorSystem
+import org.apache.pekko.actor.ActorSystem
 import play.api.routing.Router
 import play.api.BuiltInComponentsFromContext
 import controllers.{AssetsComponents, Application}

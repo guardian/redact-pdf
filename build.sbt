@@ -8,13 +8,13 @@ version := "1.0"
 lazy val root = (project in file(".")).enablePlugins(PlayScala, JavaServerAppPackaging, SystemdPlugin)
 
 
-scalaVersion := "3.3.1"
+scalaVersion := "3.3.3"
 scalacOptions += "-deprecation"
 
 
 libraryDependencies ++= Seq(
   "org.apache.pdfbox" % "pdfbox" % "2.0.27",
-  "com.gu" %% "play-v29-brotli-filter" % "0.15.2",
+  "com.gu" %% "play-v30-brotli-filter" % "0.15.2",
   "org.scalatestplus.play" %% "scalatestplus-play" % "7.0.1" % Test
 )
 
