@@ -47,7 +47,7 @@ export class CvRedactTool extends GuStack {
 			},
 			applicationLogging: { enabled: true },
 			imageRecipe: {
-				Recipe: 'developerPlayground-arm64-java21',
+				Recipe: 'arm64-java21',
 				Encrypted: true,
 			},
 		});
