@@ -14,8 +14,7 @@ scalacOptions += "-deprecation"
 
 libraryDependencies ++= Seq(
   "org.apache.pdfbox" % "pdfbox" % "2.0.27",
-  "com.gu" %% "play-v30-brotli-filter" % "0.17.0",
-  "org.scalatestplus.play" %% "scalatestplus-play" % "7.0.1" % Test
+  "com.gu" %% "play-v30-brotli-filter" % "0.17.0"
 )
 
 // Adds additional packages into Twirl
