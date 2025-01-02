@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Bun Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`The CvRedactTool stack matches the snapshot 1`] = `
 {
@@ -867,14 +867,18 @@ exports[`The CvRedactTool stack matches the snapshot 1`] = `
               "Fn::Join": [
                 "",
                 [
-                  "#!/bin/bash
+                  
+"#!/bin/bash
 mkdir -p $(dirname '/cv-redact-tool/cv-redact-tool.deb')
-aws s3 cp 's3://",
+aws s3 cp 's3://"
+,
                   {
                     "Ref": "DistributionBucketName",
                   },
-                  "/hiring-and-onboarding/TEST/cv-redact-tool/cv-redact-tool.deb' '/cv-redact-tool/cv-redact-tool.deb'
-dpkg -i /cv-redact-tool/cv-redact-tool.deb",
+                  
+"/hiring-and-onboarding/TEST/cv-redact-tool/cv-redact-tool.deb' '/cv-redact-tool/cv-redact-tool.deb'
+dpkg -i /cv-redact-tool/cv-redact-tool.deb"
+,
                 ],
               ],
             },
