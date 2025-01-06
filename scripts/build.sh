@@ -6,8 +6,8 @@ set -e
 
 (
     cd cdk
-    npm ci
-    npm run lint
-    npm test
-    npm run synth
+    bun install --frozen-lockfile
+    bun lint
+    bun test
+    bun synth
 )
