@@ -11,7 +11,7 @@ jobs:
       - name: Checkout branch
         id: checkout
         uses: actions/checkout@v4
-      - uses: sebt/setup@v1
+      - uses: sbt/setup@v1
       - name: Submit dependencies
         id: submit
         uses: scalacenter/sbt-dependency-submission@7ebd561e5280336d3d5b445a59013810ff79325e # v3.0.1
