@@ -1,6 +1,6 @@
 addSbtPlugin("org.playframework" % "sbt-plugin" % "3.0.8")
 
-addSbtPlugin("com.github.sbt" % "sbt-native-packager" % "1.10.0")
+addSbtPlugin("com.github.sbt" % "sbt-native-packager" % "1.10.4")
 
 /* 
    The following is needed because scala-xml has not be updated to 2.x in sbt yet but has in sbt-native-packager 
