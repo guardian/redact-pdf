@@ -1,17 +1,15 @@
 package redact
 
-import scala.jdk.CollectionConverters._
 import com.typesafe.config.ConfigFactory
-
-import java.io.{File, OutputStream}
-import java.awt.Color
-
-import org.apache.pdfbox.pdmodel.{PDDocument, PDPage, PDPageContentStream}
+import org.apache.pdfbox.Loader
 import org.apache.pdfbox.pdmodel.common.PDRectangle
 import org.apache.pdfbox.pdmodel.graphics.image.JPEGFactory
+import org.apache.pdfbox.pdmodel.{PDDocument, PDPage, PDPageContentStream}
 import org.apache.pdfbox.rendering.{ImageType, PDFRenderer}
-import play.api.Logger
-import scala.collection.Searching.Found
+
+import java.awt.Color
+import java.io.{File, OutputStream}
+import scala.jdk.CollectionConverters.*
 
 object PdfRedactor {
 
@@ -34,14 +32,14 @@ object PdfRedactor {
   }
 
   def candidates(source: File): List[Candidate] = {
-    val document = PDDocument.load(source)
+    val document = Loader.loadPDF(source)
     val candidates = TextFinder.analyse(document)
     document.close()
     candidates
   }
 
   def redact(source: File, destination: OutputStream, names: List[String]): Unit = {
-    val document = PDDocument.load(source)
+    val document = Loader.loadPDF(source)
     redact(document, destination, names)
     document.close()
   }
