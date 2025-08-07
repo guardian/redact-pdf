@@ -1,15 +1,16 @@
 package controllers
 
+import org.apache.pdfbox.Loader
 import org.apache.pekko.stream.scaladsl.StreamConverters
-import play.api.mvc._
+import play.api.mvc.*
 import redact.PdfRedactor
-import play.api.data._
-import play.api.data.Forms._
+import play.api.data.*
+import play.api.data.Forms.*
 import play.api.libs.Files
+
 import java.nio.file.Paths
 import java.util.zip.ZipOutputStream
 import java.util.zip.ZipEntry
-
 import org.apache.pdfbox.pdmodel.PDDocument
 import play.api.Logger
 
@@ -70,7 +71,7 @@ class Application(cc: ControllerComponents) extends AbstractController(cc) {
   def importFromTaleo: Action[MultipartFormData[Files.TemporaryFile]] = Action(parse.multipartFormData) { implicit request =>
     request.body.file("pdf").map { pdf =>
       val candidates = PdfRedactor.candidates(pdf.ref)
-      val doc = PDDocument.load(pdf.ref)
+      val doc = Loader.loadPDF(pdf.ref)
       val docs = PdfRedactor.splitCandidates(doc, candidates)
       val uploadedFilename = Paths.get(pdf.filename).getFileName.toString
       val filename = uploadedFilename.replace(".pdf", "-anon.zip")

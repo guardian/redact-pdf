@@ -22,7 +22,7 @@ object Image {
     PDImageXObject.createFromByteArray(document, toByteArray(img, format = "png"), "redacted.png")
   }
 
-  private def toByteArray(image: BufferedImage, format: String): Array[Byte] = try {
+  private def toByteArray(image: BufferedImage, format: String): Array[Byte] = {
     val out = new ByteArrayOutputStream
     try {
       ImageIO.write(image, format, out)
