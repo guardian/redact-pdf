@@ -18,11 +18,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Configure private infra config credentials
-        uses: guardian/actions-read-private-repos@v0.1.0
-        with:
-          private-ssh-keys: ${{ secrets.PRIVATE_INFRASTRUCTURE_CONFIG_DEPLOY_KEY }}
-
       - name: Setup bun
         uses: oven-sh/setup-bun@v2
         with:
