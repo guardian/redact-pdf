@@ -13,7 +13,7 @@ scalacOptions += "-deprecation"
 
 
 libraryDependencies ++= Seq(
-  "org.apache.pdfbox" % "pdfbox" % "3.0.5",
+  "org.apache.pdfbox" % "pdfbox" % "3.0.6",
   "com.gu" %% "play-v30-brotli-filter" % "0.18.0"
 )
 
