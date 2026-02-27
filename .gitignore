@@ -1,6 +1,5 @@
-# sbt
-.bsp/sbt.json
-
+.bsp/
+.scala-build/
 logs
 target
 /.idea
@@ -11,3 +10,10 @@ target
 /RUNNING_PID
 project/project
 project/metals.sbt
+.DS_Store
+.metals/
+.vscode/
+redacted_cvs/*
+!redacted_cvs/.gitkeep
+incoming_cvs/*
+!incoming_cvs/.gitkeep

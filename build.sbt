@@ -48,7 +48,6 @@ normalisePackageName := {
 }
 
 
-
 /* A debian package needs some mandatory settings to be valid */
 maintainer := "The Guardian engineering managers  <engineering.managers@theguardian.com>"
 Debian / packageSummary := "Online web app to redact cv"
@@ -67,4 +66,11 @@ Universal / javaOptions ++= Seq(
 )
 
 
+Compile / scalaSource := baseDirectory.value / "app"
 
+assembly / mainClass := Some("redact.Main")
+assembly / assemblyMergeStrategy := {
+  case PathList("META-INF", xs @ _*) => MergeStrategy.discard
+  case "reference.conf"              => MergeStrategy.concat
+  case x                             => MergeStrategy.first
+}
