@@ -34,22 +34,30 @@ for pdf_file in "$INPUT_DIR"/*.pdf; do
     # Check if directory is empty to avoid processing literal '*.pdf'
     [ -e "$pdf_file" ] || continue 
 
-    # Extract just the filename from the path
+    # Extract just the filename (e.g., John_Paul_Jones_12345.pdf)
     filename=$(basename "$pdf_file")
     
-    # 1. Remove the .pdf extension
+    # 1. Strip the .pdf extension -> John_Paul_Jones_12345
     name_without_ext="${filename%.pdf}"
     
-    # 2. Replace underscores with spaces (e.g., "Jane_Doe_CV" -> "Jane Doe CV")
-    clean_name="${name_without_ext//_/ }"
+    # 2. Extract employee number: grab everything AFTER the last underscore -> 12345
+    employeenumber="${name_without_ext##*_}"
     
-    echo "Redacting $filename using extracted name: $clean_name"
+    # 3. Extract the names: grab everything BEFORE the last underscore -> John_Paul_Jones
+    names_part="${name_without_ext%_*}"
+    
+    # 4. Replace underscores with spaces -> "John Paul Jones"
+    names_to_pass="${names_part//_/ }"
+    
+    # Define the new output filename using only the employee number
+    output_filename="${employeenumber}.pdf"
+    
+    echo "Processing $filename -> Saving as $output_filename (Redacting: $names_to_pass)"
     
     # Execute the Scala JAR
-    # Notice $clean_name is NOT in quotes, so bash splits it into separate arguments
-    # (e.g., arg3="Jane", arg4="Doe", arg5="CV")
-    java -Dconfig.file=conf/application.conf -jar "$JAR_PATH" "$pdf_file" "$OUTPUT_DIR/$filename" $clean_name
-
+    # IMPORTANT: $names_to_pass is intentionally NOT in quotes so bash splits 
+    # the string by spaces and passes each name as a separate argument to Scala.
+    java -jar "$JAR_PATH" "$pdf_file" "$OUTPUT_DIR/$output_filename" $names_to_pass
     # Check if the Java command succeeded
     if [ $? -ne 0 ]; then
         echo "Error processing $filename"
