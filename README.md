@@ -5,7 +5,12 @@
 This tool attempts to remove names, pronouns, email addresses and urls from CVs so that recruiters selecting people for
 interview aren't influenced by the candidates gender. It is not perfect, so I'd recommend a manual check of the results.
 
-## CLI tool
+## Dev
+
+> [!NOTE]
+> For optimal developer experience, we recommend using [mise](https://mise.jdx.dev/getting-started.html) for Java version management.
+
+### CLI tool
 
 Compile the project and build a JAR
 
@@ -24,14 +29,14 @@ Run the script:
 
 Redacted CVs will be output in the `redacted_cvs` folder
 
-## Web app
+### Web app
 
-### Run locally
+#### Run locally
 
 There is a script to run the project locally. This starts the app with flags to set the memory settings required to run multiple CVs through.
 
 Run `./startapp.sh` in project root
 
-### Deployment
+#### Deployment
 
 This project is continuously deployed using `riff-raff`.
