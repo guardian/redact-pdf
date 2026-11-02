@@ -13,7 +13,7 @@ scalacOptions += "-deprecation"
 
 
 libraryDependencies ++= Seq(
-  "org.apache.pdfbox" % "pdfbox" % "3.0.7"
+  "org.apache.pdfbox" % "pdfbox" % "3.0.8"
 )
 
 // Adds additional packages into Twirl
