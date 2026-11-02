@@ -8,12 +8,12 @@ version := "1.0"
 lazy val root = (project in file(".")).enablePlugins(PlayScala, JavaServerAppPackaging, SystemdPlugin)
 
 
-scalaVersion := "3.3.7"
+scalaVersion := "3.3.9"
 scalacOptions += "-deprecation"
 
 
 libraryDependencies ++= Seq(
-  "org.apache.pdfbox" % "pdfbox" % "3.0.7"
+  "org.apache.pdfbox" % "pdfbox" % "3.0.8"
 )
 
 // Adds additional packages into Twirl
