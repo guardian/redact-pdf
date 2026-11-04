@@ -1,0 +1,5 @@
+[tools]
+bun = "{{ read_file(path=config_root ~ '/cdk/.bun-version') | trim }}"
+
+[settings]
+idiomatic_version_file_enable_tools = ["bun"]
