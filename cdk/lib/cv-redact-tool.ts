@@ -9,7 +9,7 @@ import type { App } from 'aws-cdk-lib';
 import {
 	InstanceClass,
 	InstanceSize,
-	InstanceType
+	InstanceType,
 } from 'aws-cdk-lib/aws-ec2';
 
 export class CvRedactTool extends GuStack {
@@ -29,6 +29,7 @@ export class CvRedactTool extends GuStack {
 				scope: AccessScope.PUBLIC,
 			},
 			instanceType: InstanceType.of(InstanceClass.T4G, InstanceSize.MEDIUM),
+			instanceMetricGranularity: '5Minute',
 			certificateProps: {
 				domainName,
 			},
