@@ -9,7 +9,7 @@ import type { App } from 'aws-cdk-lib';
 import {
 	InstanceClass,
 	InstanceSize,
-	InstanceType,
+	InstanceType
 } from 'aws-cdk-lib/aws-ec2';
 
 export class CvRedactTool extends GuStack {
