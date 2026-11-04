@@ -403,28 +403,6 @@ exports[`The CvRedactTool stack matches the snapshot 1`] = `
         "Port": 443,
         "Protocol": "HTTPS",
         "SslPolicy": "ELBSecurityPolicy-TLS13-1-2-2021-06",
-        "Tags": [
-          {
-            "Key": "App",
-            "Value": "cv-redact-tool",
-          },
-          {
-            "Key": "gu:cdk:version",
-            "Value": "TEST",
-          },
-          {
-            "Key": "gu:repo",
-            "Value": "guardian/redact-pdf",
-          },
-          {
-            "Key": "Stack",
-            "Value": "hiring-and-onboarding",
-          },
-          {
-            "Key": "Stage",
-            "Value": "TEST",
-          },
-        ],
       },
       "Type": "AWS::ElasticLoadBalancingV2::Listener",
     },
