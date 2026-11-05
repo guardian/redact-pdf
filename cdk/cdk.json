@@ -1,5 +1,5 @@
 {
-  "app": "bun run bin/cdk.ts",
+  "app": "CDK_NO_PERF_BUILTINS=1 bun run bin/cdk.ts",
   "context": {
     "aws-cdk:enableDiffNoFail": "true",
     "@aws-cdk/core:stackRelativeExports": "true"

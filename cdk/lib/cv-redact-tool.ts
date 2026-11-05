@@ -29,6 +29,7 @@ export class CvRedactTool extends GuStack {
 				scope: AccessScope.PUBLIC,
 			},
 			instanceType: InstanceType.of(InstanceClass.T4G, InstanceSize.MEDIUM),
+			instanceMetricGranularity: '5Minute',
 			certificateProps: {
 				domainName,
 			},
