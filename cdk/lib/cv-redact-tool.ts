@@ -36,6 +36,11 @@ export class CvRedactTool extends GuStack {
 			monitoringConfiguration: {
 				noMonitoring: true,
 			},
+			googleAuth: {
+				enabled: true,
+				sessionTimeoutInMinutes: 60,
+				domain: domainName
+			},
 			userData: {
 				distributable: {
 					fileName: 'cv-redact-tool.deb',
