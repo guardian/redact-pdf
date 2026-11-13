@@ -754,7 +754,7 @@ exports[`The CvRedactTool stack matches the snapshot 1`] = `
         },
         "Environment": {
           "Variables": {
-            "ALLOWED_GROUPS": "engineering@guardian.co.uk",
+            "ALLOWED_GROUPS": "engineering@guardian.co.uk,digdev.interviewers@guardian.co.uk",
             "APP": "cv-redact-tool",
             "GATEKEEPER_FUNCTION_ARN": {
               "Fn::Join": [
